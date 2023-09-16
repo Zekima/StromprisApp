@@ -1,12 +1,14 @@
 package com.example.stromprisapp
 
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
 object DataFetcher {
-    fun fetchApiData(year: String, month: String, day: String, priceArea: String): String? {
+    fun fetchApiData(year: String, month: String, day: String, priceArea: String): List<PriceData>? {
         val apiUrl = "https://www.hvakosterstrommen.no/api/v1/prices/$year/$month-${day}_$priceArea.json"
         var connection: HttpURLConnection? = null
         var reader: BufferedReader? = null
@@ -26,8 +28,8 @@ object DataFetcher {
                 buffer.append("$line\n")
             }
 
-            return buffer.toString()
-
+            val json = buffer.toString()
+            return Json.decodeFromString<List<PriceData>>(json)
         } catch (e: Exception) {
             e.printStackTrace()
             return null
