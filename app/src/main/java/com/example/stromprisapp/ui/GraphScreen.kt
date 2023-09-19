@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import com.example.stromprisapp.DataFetcher
 import com.example.stromprisapp.PriceData
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +27,10 @@ fun GraphScreen() {
         if (sortedData != null) {
             sortedData.forEach { priceData ->
                 Text(
-                    text = "kl: " + convertTime(priceData.timeStart) + ", " + String.format("%.2f", priceData.nokPerKwh * 100) + " øre"
+                    text = "kl: " + convertTime(priceData.timeStart) + ", " + String.format("%.2f", priceData.nokPerKwh * 100) + " øre",
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
                 )
             }
         } else {
