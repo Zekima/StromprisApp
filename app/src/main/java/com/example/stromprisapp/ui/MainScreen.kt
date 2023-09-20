@@ -1,4 +1,5 @@
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import com.example.stromprisapp.ui.GraphScreen
 import com.example.stromprisapp.ui.HomeScreen
 import com.example.stromprisapp.ui.SettingsScreen
 
+@SuppressLint("NewApi")
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
