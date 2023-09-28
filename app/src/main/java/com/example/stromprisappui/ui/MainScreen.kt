@@ -18,9 +18,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.stromprisapp.ui.GraphScreen
-import com.example.stromprisapp.ui.HomeScreen
-import com.example.stromprisapp.ui.SettingsScreen
+import com.example.stromprisappui.ui.GraphScreen
+import com.example.stromprisappui.ui.HomeScreen
+import com.example.stromprisappui.ui.SettingsScreen
 
 @Composable
 fun MainScreen() {
@@ -41,11 +41,12 @@ fun MainScreen() {
                 .padding(bottom = 4.dp))
         {
             composable("home") { HomeScreen() }
-            composable("graph") { GraphScreen() }
+            composable("graph") { GraphScreen(navController) }
             composable("settings") { SettingsScreen() }
         }
 
         NavigationBar(
+
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             NavigationBarItem(

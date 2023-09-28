@@ -1,4 +1,4 @@
-package com.example.stromprisapp
+package com.example.stromprisappui
 
 import org.junit.Test
 

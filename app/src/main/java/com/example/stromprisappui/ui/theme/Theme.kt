@@ -1,4 +1,4 @@
-package com.example.stromprisapp.ui.theme
+package com.example.stromprisappui.ui.theme
 
 import android.app.Activity
 import android.os.Build
