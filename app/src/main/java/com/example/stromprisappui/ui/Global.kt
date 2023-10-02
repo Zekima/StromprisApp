@@ -1,0 +1,32 @@
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import com.example.stromprisapp.ui.theme.Black
+import com.example.stromprisapp.ui.theme.Brown
+import com.example.stromprisapp.ui.theme.Purple80
+import com.example.stromprisapp.ui.theme.White
+
+
+object Global {
+
+    var isDarkMode by mutableStateOf(false)
+
+    val bakgrunnsfarge: Color
+        get() = if (isDarkMode) {
+            Purple80
+        } else {
+            White
+        }
+
+    var valgtSone by mutableStateOf("")
+
+    var velgValuta by mutableStateOf("velg valuta")
+
+    var velgSone by mutableStateOf("velg sone")
+
+    var valutaEUR by mutableStateOf(false)
+    var valutaNOK by mutableStateOf(false)
+}
