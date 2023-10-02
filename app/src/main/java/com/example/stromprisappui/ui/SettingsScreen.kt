@@ -43,13 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.example.stromprisapp.ui.Global.bakgrunnsfarge
-import com.example.stromprisapp.ui.Global.isDarkMode
-import com.example.stromprisapp.ui.Global.valgtSone
-import com.example.stromprisapp.ui.Global.valutaEUR
-import com.example.stromprisapp.ui.Global.valutaNOK
-import com.example.stromprisapp.ui.Global.velgSone
-import com.example.stromprisapp.ui.Global.velgValuta
+
 
  @Composable
 fun SettingsScreen( ) {
