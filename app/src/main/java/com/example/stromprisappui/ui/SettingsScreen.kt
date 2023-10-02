@@ -40,6 +40,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.example.stromprisapp.ui.Global.bakgrunnsfarge
+import com.example.stromprisapp.ui.theme.Black
+import com.example.stromprisapp.ui.theme.White
 
 
 @Composable
@@ -121,4 +124,31 @@ fun SettingsScreen( ) {
     }
 }
 
+@Composable
+fun TekstMedBakgrunn(
+    backgroundColor: Color = bakgrunnsfarge,
+    tekst: String,
+    fontSize: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    modifier: Modifier = Modifier
+
+) {
+    val farge = kontrastFarge(backgroundColor)
+
+   Text(text = tekst,
+       color = farge,
+       fontSize = fontSize,
+       fontWeight = fontWeight)
+}
+
+fun kontrastFarge(backgroundColor: Color, modifier: Modifier = Modifier): Color {
+
+    val farge = (0.299 * backgroundColor.red + 0.587 * backgroundColor.green + 0.114 * backgroundColor.blue).toFloat()
+
+   return if(farge > 0.5){
+        Black
+    } else {
+        White
+    }
+}
     
