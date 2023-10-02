@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -35,8 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.stromprisapp.ui.theme.Black
-import com.example.stromprisapp.ui.theme.White
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +42,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
 
- @Composable
+@Composable
 fun SettingsScreen( ) {
 
     var menyvalgValuta by remember {
@@ -73,7 +70,7 @@ fun SettingsScreen( ) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TekstMedBakgrunn(backgroundColor = bakgrunnsfarge, tekst = "Settings", fontSize = 40.sp, modifier = Modifier.padding(16.dp) )
+
         Text(text = "Settings", fontSize = 40.sp, modifier = Modifier.padding(16.dp))
 
 
@@ -106,7 +103,7 @@ fun SettingsScreen( ) {
             }
 
             Button(onClick = { menyvalgValuta = true } ) {
-                Text(text = velgValuta)
+                Text(text = "velg valuta")
             }
             DropdownMenu(expanded = menyvalgValuta, onDismissRequest = { menyvalgValuta = false}, offset = DpOffset((-16).dp, (-16).dp)) {
                 listeValuta.forEachIndexed { index, item ->
