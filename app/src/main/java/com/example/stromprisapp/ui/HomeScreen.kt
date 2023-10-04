@@ -1,6 +1,6 @@
 package com.example.stromprisapp.ui
 
-import com.example.stromprisappui.ui.Global
+import com.example.stromprisapp.ui.Global
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.stromprisappui.ui.TekstMedBakgrunn
+import com.example.stromprisapp.ui.TekstMedBakgrunn
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
