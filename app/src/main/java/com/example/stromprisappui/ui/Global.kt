@@ -1,13 +1,10 @@
+package com.example.stromprisappui.ui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import com.example.stromprisapp.ui.theme.Black
-import com.example.stromprisapp.ui.theme.Brown
-import com.example.stromprisapp.ui.theme.Purple80
-import com.example.stromprisapp.ui.theme.White
+import com.example.stromprisappui.ui.theme.Purple80
+import com.example.stromprisappui.ui.theme.White
 
 
 object Global {
