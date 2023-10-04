@@ -1,4 +1,4 @@
-package com.example.stromprisappui
+package com.example.stromprisapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

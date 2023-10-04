@@ -1,4 +1,4 @@
-package com.example.stromprisappui.ui.theme
+package com.example.stromprisapp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

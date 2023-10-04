@@ -1,4 +1,6 @@
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,10 +20,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.stromprisappui.ui.GraphScreen
-import com.example.stromprisappui.ui.HomeScreen
-import com.example.stromprisappui.ui.SettingsScreen
+import com.example.stromprisapp.ui.HomeScreen
+import com.example.stromprisapp.ui.GraphScreen
+import com.example.stromprisapp.ui.SettingsScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()

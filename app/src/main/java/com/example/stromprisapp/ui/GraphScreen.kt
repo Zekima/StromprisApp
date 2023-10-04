@@ -1,4 +1,4 @@
-package com.example.stromprisappui.ui
+package com.example.stromprisapp.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
