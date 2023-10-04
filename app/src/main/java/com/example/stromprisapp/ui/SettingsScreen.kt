@@ -118,7 +118,8 @@ fun TekstMedBakgrunn(
     tekst: String,
     fontSize: TextUnit = 16.sp,
     fontWeight: FontWeight = FontWeight.Normal,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    fontSize: TextUnit = 16.sp
 
 ) {
     val farge = kontrastFarge(backgroundColor)
