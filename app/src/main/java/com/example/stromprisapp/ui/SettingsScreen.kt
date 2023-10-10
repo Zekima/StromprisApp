@@ -1,6 +1,5 @@
 package com.example.stromprisapp.ui
 
-import com.example.stromprisapp.ui.Global.bakgrunnsfarge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +28,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.stromprisapp.ui.Global.bakgrunnsfarge
 import com.example.stromprisapp.ui.theme.Black
 import com.example.stromprisapp.ui.theme.White
 
@@ -119,7 +119,6 @@ fun TekstMedBakgrunn(
     fontSize: TextUnit = 16.sp,
     fontWeight: FontWeight = FontWeight.Normal,
     modifier: Modifier = Modifier,
-    fontSize: TextUnit = 16.sp
 
 ) {
     val farge = kontrastFarge(backgroundColor)
