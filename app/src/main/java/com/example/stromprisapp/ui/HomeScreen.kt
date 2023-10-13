@@ -1,88 +1,111 @@
 package com.example.stromprisapp.ui
 
-import com.example.stromprisapp.ui.Global
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.stromprisapp.ui.TekstMedBakgrunn
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
 
-@RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("SimpleDateFormat")
 @Preview
 @Composable
 fun HomeScreen() {
+    val sharedPrefMva = LocalContext.current.getSharedPreferences("mySharedPrefMva", Context.MODE_PRIVATE)
     val litenOverskrift = 20.sp; val pris = 50.sp; val valuta = 17.sp
     val datesize = 16.sp; val paddingMellomOverskrifter = 70.dp
+    var mVa = sharedPrefMva.getBoolean("medMva", false)
+    var dagensPrisKr = 143.5; var medianPrisKr = 138.7
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         TekstMedBakgrunn(
-            backgroundColor = Global.bakgrunnsfarge,
-            "Strømpriser",
+            tekst = "Strømpriser",
             modifier = Modifier.padding(top = paddingMellomOverskrifter),
             fontSize = 50.sp
         )
         TekstMedBakgrunn(
-            backgroundColor = Global.bakgrunnsfarge,
-            "Strømprisen idag",
+            tekst = "Strømprisen idag",
             modifier = Modifier.padding(top = paddingMellomOverskrifter),
             fontSize = litenOverskrift,
             fontWeight = FontWeight.Bold
         )
         TekstMedBakgrunn(
-            backgroundColor = Global.bakgrunnsfarge,
-            ""+ SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now())),
+            tekst = ""+ SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now())),
             fontSize = datesize
         )
         Row() {
             TekstMedBakgrunn(
-                backgroundColor = Global.bakgrunnsfarge,
-                "143.5",
+                tekst = if (!mVa) "$dagensPrisKr" else "${BigDecimal(dagensPrisKr*1.25).setScale(2, RoundingMode.HALF_UP).toString()}" ,
                 fontSize = pris
-
             )
             TekstMedBakgrunn(
-                backgroundColor = Global.bakgrunnsfarge,
-                "øre/kWh",
+                tekst = "øre/kWh",
                 modifier = Modifier.padding(top = 32.dp),
                 fontSize = valuta
             )
         }
         TekstMedBakgrunn(
-            backgroundColor = Global.bakgrunnsfarge,
-            "Medianpris for gårsdagen",
+            tekst = "Medianpris for gårsdagen",
             modifier = Modifier.padding(top = paddingMellomOverskrifter),
             fontSize = litenOverskrift,
             fontWeight = FontWeight.Bold
         )
         Row() {
             TekstMedBakgrunn(
-                backgroundColor = Global.bakgrunnsfarge,
-                "139.7",
+                tekst = if (!mVa) "$medianPrisKr" else "${BigDecimal(medianPrisKr*1.25).setScale(2, RoundingMode.HALF_UP).toString()}",
                 fontSize = pris
             )
             TekstMedBakgrunn(
-                backgroundColor = Global.bakgrunnsfarge,
-                "øre/kWh",
+                tekst = "øre/kWh",
                 modifier = Modifier.padding(top = 32.dp),
                 fontSize = valuta
             )
         }
+        Row( modifier = Modifier.padding(top = 10.dp) ) {
+            mVa = MedMvaSwitch(sharedPreferences = sharedPrefMva)
+            TekstMedBakgrunn(
+                tekst = " med mVa",
+                fontSize = datesize,
+                modifier = Modifier.padding(top = 15.dp)
+            )
+        }
     }
+}
+@Composable
+fun MedMvaSwitch(sharedPreferences: SharedPreferences) : Boolean {
+    val medMva = remember { mutableStateOf(sharedPreferences.getBoolean("medMva", false)) }
+    Switch(
+        checked = medMva.value,
+        onCheckedChange = { newValue ->
+            sharedPreferences.edit().putBoolean("medMva", newValue).apply()
+            medMva.value = newValue
+        }
+    )
+    return sharedPreferences.getBoolean("medMva", false)
 }
