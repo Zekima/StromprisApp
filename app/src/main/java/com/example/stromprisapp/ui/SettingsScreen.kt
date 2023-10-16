@@ -157,19 +157,17 @@ fun SettingsScreen( ) {
 
 @Composable
 fun TekstMedBakgrunn(
-    backgroundColor: Color = bakgrunnsfarge,
     tekst: String,
     fontSize: TextUnit = 16.sp,
     fontWeight: FontWeight = FontWeight.Normal,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 
 ) {
-    val farge = kontrastFarge(backgroundColor)
-
    Text(text = tekst,
-       color = farge,
+       color = MaterialTheme.colorScheme.primary,
        fontSize = fontSize,
        fontWeight = fontWeight)
+
 }
 
 fun kontrastFarge(backgroundColor: Color, modifier: Modifier = Modifier): Color {
