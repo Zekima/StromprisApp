@@ -54,4 +54,22 @@ object Utils {
         return outputFormat.format(date)
     }
 
+    fun includeFees(grunnprisOrePerKwh: Double): String {
+        val mvaRate = 1.25 // 25%
+        val nettleiePerKwh = 0.17 // 17 øre/kwh, som er 0.17 kr/kwh
+        val avgiftPerKwh = 0.0891 // 8,91 øre/kwh, som er 0.0891 kr/kwh
+
+        // Konverterer grunnpris til kroner
+        val grunnprisKrPerKwh = grunnprisOrePerKwh / 100
+
+        // Kalkuler total pris i kroner
+        val totalPrisKrPerKwh = grunnprisKrPerKwh + nettleiePerKwh + avgiftPerKwh
+        val totalMedMva = totalPrisKrPerKwh * mvaRate
+
+        // Konverterer tilbake til øre
+        val totalOrePerKwh = totalMedMva * 100
+
+        return totalOrePerKwh.toString()
+    }
+
 }

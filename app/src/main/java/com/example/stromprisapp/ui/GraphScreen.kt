@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.stromprisapp.PriceData
+import com.example.stromprisapp.Utils
 import com.example.stromprisapp.Utils.convertTime
 import com.example.stromprisapp.Utils.fetchApiData
 import kotlinx.coroutines.Dispatchers
@@ -290,49 +291,12 @@ fun GraphScreen(navController: NavController) {
             }
 
             if (selectedDataPoint !== null && selectedDataPointIndex >= 0 && selectedDataPointIndex < pointRecs.value.size) {
-                var currentRect = pointRecs.value.get(selectedDataPointIndex)
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(
-                        modifier = Modifier
-                            .graphicsLayer(
-                                translationX = currentRect.left - 69,
-                                translationY = currentRect.top - 140
-                            )
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color.Black)
-                            .width(60.dp)
-                            .height(45.dp),
-                        contentAlignment = Alignment.Center
-
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "Kl: " + convertTime(selectedDataPoint!!.timeStart, "HH"),
-                                color = Color.White,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                textAlign = TextAlign.Center,
-                                color = Color.White,
-                                text = "${"%.2f".format(selectedDataPoint!!.nokPerKwh * 100)} øre"
-                            )
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .graphicsLayer(
-                                translationX = currentRect.left - 69,
-                                translationY = currentRect.top - 140
-                            )
-                            .width(30.dp)
-                            .height(15.dp)
-                            .rotate(180f)
-                            .background(Color.Black, shape = TriangleShape)
-                    )
-
-                }
-
-
+                var currentRect = pointRecs.value[selectedDataPointIndex]
+                PriceTooltip(
+                    selectedDataPoint = selectedDataPoint,
+                    rect = currentRect,
+                    includeFees = checked
+                )
             }
         }
 
@@ -370,6 +334,60 @@ private fun generatePath(data: List<PriceData>, xScale: Float, yScale: Float, si
     return path
 }
 
+@Composable
+fun PriceTooltip(
+    selectedDataPoint: PriceData?,
+    rect: Rect,
+    includeFees: Boolean
+) {
+    if (selectedDataPoint != null) {
+
+        val displayPrice = if (includeFees) {
+            String.format("%.0f",Utils.includeFees(selectedDataPoint.nokPerKwh * 100))
+        } else {
+            String.format("%.2f", selectedDataPoint.nokPerKwh *100)
+        }
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(
+                modifier = Modifier
+                    .graphicsLayer(
+                        translationX = rect.left - 69,
+                        translationY = rect.top - 140
+                    )
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.Black)
+                    .width(60.dp)
+                    .height(45.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "Kl: " + convertTime(selectedDataPoint.timeStart, "HH"),
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                        text = "$displayPrice øre"
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .graphicsLayer(
+                        translationX = rect.left - 69,
+                        translationY = rect.top - 140
+                    )
+                    .width(30.dp)
+                    .height(15.dp)
+                    .rotate(180f)
+                    .background(Color.Black, shape = TriangleShape)
+            )
+        }
+    }
+}
 
 //https://foso.github.io/Jetpack-Compose-Playground/cookbook/how_to_create_custom_shape/
 private val TriangleShape = GenericShape { size, _ ->
