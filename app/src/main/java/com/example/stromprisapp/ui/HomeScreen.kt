@@ -31,6 +31,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.Year
 import java.util.Date
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -44,7 +45,7 @@ fun HomeScreen() {
     val month = LocalDate.now().month.value
     val day = LocalDateTime.now().dayOfMonth
     val list = fetchResult(year = year.toString(), month = month.toString(), day = day.toString())
-    var tekst = getList(list)
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -101,7 +102,7 @@ fun HomeScreen() {
 
             TekstMedBakgrunn(
                 backgroundColor = Global.bakgrunnsfarge,
-                currTime.toString(),
+                formatNOKToString(list?.get(currTime)?.nokPerKwh),
                 //formatNOKToString(list?.get(currTime)?.nokPerKwh),
                 fontSize = pris
 
