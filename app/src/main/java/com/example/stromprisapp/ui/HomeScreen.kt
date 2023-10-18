@@ -32,6 +32,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.Year
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.util.Date
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -72,7 +74,6 @@ fun HomeScreen() {
 
         Row() {
             var currTime by remember { mutableStateOf(LocalTime.now().hour) }
-            println(currTime)
             var holder = currTime
             CoroutineScope(Dispatchers.Default).launch {
                 delay(1000)
@@ -81,31 +82,12 @@ fun HomeScreen() {
                 if (holder>currTime) {
                     currTime = holder
                 }
-                println(currTime)
+
             }
-//            LaunchedEffect(key1 = currTime) {
-//                val flowTime = flow<Int> {
-//                    emit(LocalTime.now().second)
-//                    delay(1000)
-//                }
-//
-//                flowTime.collect {
-//                    holder = it
-//                    println(holder)
-//                    if (holder > dum) {
-//                     dum = holder
-//                        println(dum)
-//                    }
-//                }
-//            }
-
-
             TekstMedBakgrunn(
                 backgroundColor = Global.bakgrunnsfarge,
                 formatNOKToString(list?.get(currTime)?.nokPerKwh),
-                //formatNOKToString(list?.get(currTime)?.nokPerKwh),
                 fontSize = pris
-
             )
             TekstMedBakgrunn(
                 backgroundColor = Global.bakgrunnsfarge,
@@ -122,9 +104,52 @@ fun HomeScreen() {
             fontWeight = FontWeight.Bold
         )
         Row() {
+            var medianText  = ""
+            println("GETMEDIAN")
+            val currentDate = LocalDate.now().toString()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val parsedDate = LocalDate.parse(currentDate, formatter)
+
+            val isFirstDateOfMonth = parsedDate.dayOfMonth == 1
+            val isFirstDateOfYear = parsedDate.dayOfYear == 1
+
+            // Adjust variables based on whether it's the first date of the month or year
+            if (isFirstDateOfMonth) {
+                println(12)
+                val list = fetchResult(
+                    year.toString(),
+                    (month - 1).toString(),
+                    getLastDayOfMonth(year.toInt(), (month-1).toInt()).toString()
+                )
+
+            }
+
+            if (isFirstDateOfYear) {
+                println(13)
+                val list = fetchResult(
+                    (year-1).toString(),
+                    (1).toString(),
+                    getLastDayOfMonth((year - 1).toInt(), 1).toString()
+                )
+                medianText = calcMedian(list)
+            }
+
+
+            println(14)
+            val list = fetchResult(
+                (year).toString(),
+                (month).toString(),
+                (day-1).toString()
+            )
+            if (list != null) {
+                medianText = calcMedian(list)
+            }
+
+
+
             TekstMedBakgrunn(
                 backgroundColor = Global.bakgrunnsfarge,
-                "139.7",
+                medianText,
                 fontSize = pris
             )
             TekstMedBakgrunn(
@@ -144,17 +169,28 @@ fun formatNOKToString(d: Double?): String {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getList(list: List<PriceData>? ) : String {
-
-    var s: String = ""
-    if (list != null) {
-        for (x in list) {
-            if (x.timeStart < LocalTime.now().toString() || x.timeEnd > LocalTime.now().toString()) {
-                s = x.nokPerKwh.toString()
-                return s
-            }
-
-        }
-    }
-    return s
+fun getLastDayOfMonth(year: Int, month: Int): Int {
+    val yearMonth = YearMonth.of(year, month)
+    return yearMonth.lengthOfMonth()
+    println("!!!!!!!!!!")
 }
+
+fun calcMedian(list : List<PriceData>?): String {
+    println("AAAAAAAA")
+    if (list != null) {
+        if (list.size %2 == 1 ) {
+            var value:Double = 0.0
+            for (x:PriceData in list) {
+                value += x.nokPerKwh*100
+            }
+            return (value/2).toString()
+        } else {
+            var value: Double = list.get(list.size-1).nokPerKwh*100
+            return (value/2).toString()
+        }
+
+    } else {
+        return ""
+    }
+}
+

@@ -17,3 +17,4 @@ fun fetchResult(year: String, month: String, day: String): List<PriceData>? {
     }
     return r.value;
 }
+
