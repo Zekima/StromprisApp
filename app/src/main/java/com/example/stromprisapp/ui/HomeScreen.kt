@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,15 +22,12 @@ import com.example.stromprisapp.PriceData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import java.lang.Math.round
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.Year
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -104,7 +100,7 @@ fun HomeScreen() {
             fontWeight = FontWeight.Bold
         )
         Row() {
-            var medianText  = ""
+            var median:Double  = 0.0
             println("GETMEDIAN")
             val currentDate = LocalDate.now().toString()
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -113,7 +109,6 @@ fun HomeScreen() {
             val isFirstDateOfMonth = parsedDate.dayOfMonth == 1
             val isFirstDateOfYear = parsedDate.dayOfYear == 1
 
-            // Adjust variables based on whether it's the first date of the month or year
             if (isFirstDateOfMonth) {
                 println(12)
                 val list = fetchResult(
@@ -131,7 +126,7 @@ fun HomeScreen() {
                     (1).toString(),
                     getLastDayOfMonth((year - 1).toInt(), 1).toString()
                 )
-                medianText = calcMedian(list)
+                median = calcMedian(list)
             }
 
 
@@ -142,14 +137,14 @@ fun HomeScreen() {
                 (day-1).toString()
             )
             if (list != null) {
-                medianText = calcMedian(list)
+                median = calcMedian(list)
             }
 
 
 
             TekstMedBakgrunn(
                 backgroundColor = Global.bakgrunnsfarge,
-                medianText,
+                formatNOKToString(median),
                 fontSize = pris
             )
             TekstMedBakgrunn(
@@ -175,22 +170,22 @@ fun getLastDayOfMonth(year: Int, month: Int): Int {
     println("!!!!!!!!!!")
 }
 
-fun calcMedian(list : List<PriceData>?): String {
+fun calcMedian(list : List<PriceData>?): Double {
     println("AAAAAAAA")
     if (list != null) {
         if (list.size %2 == 1 ) {
             var value:Double = 0.0
             for (x:PriceData in list) {
-                value += x.nokPerKwh*100
+                value += x.nokPerKwh
             }
-            return (value/2).toString()
+            return (value/2)
         } else {
-            var value: Double = list.get(list.size-1).nokPerKwh*100
-            return (value/2).toString()
+            var value: Double = list.get(list.size-1).nokPerKwh
+            return (value)
         }
 
     } else {
-        return ""
+        return 0.0
     }
 }
 
