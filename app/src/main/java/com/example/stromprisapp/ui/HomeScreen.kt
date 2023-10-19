@@ -166,7 +166,7 @@ fun HomeScreen() {
 
         TekstMedBakgrunn(
             backgroundColor = Global.bakgrunnsfarge,
-            "Medianpris for gårsdagen",
+            "Median pris i går",
             modifier = Modifier.padding(top = paddingMellomOverskrifter),
             fontSize = litenOverskrift,
             fontWeight = FontWeight.Bold
