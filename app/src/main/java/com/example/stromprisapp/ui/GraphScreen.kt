@@ -343,7 +343,9 @@ fun PriceTooltip(
     if (selectedDataPoint != null) {
 
         val displayPrice = if (includeFees) {
-            String.format("%.0f",Utils.includeFees(selectedDataPoint.nokPerKwh * 100))
+            val convertedValue = Utils.includeFees(selectedDataPoint.nokPerKwh * 100).toDouble()
+            String.format("%.0f", convertedValue)
+
         } else {
             String.format("%.2f", selectedDataPoint.nokPerKwh *100)
         }
