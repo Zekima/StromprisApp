@@ -41,6 +41,9 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Date
+import android.content.Context
+import android.content.SharedPreferences
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("SimpleDateFormat", "CoroutineCreationDuringComposition")
@@ -157,15 +160,13 @@ fun HomeScreen() {
                 }
 
                 TekstMedBakgrunn(
-                    backgroundColor = Global.bakgrunnsfarge,
-                    formatNOKToString(median),
+                    tekst = formatNOKToString(median),
                     fontSize = pris
                 )
 
 
                 TekstMedBakgrunn(
-                    backgroundColor = Global.bakgrunnsfarge,
-                    "øre/kWh",
+                    tekst = "øre/kWh",
                     modifier = Modifier.padding(top = 32.dp),
                     fontSize = valuta
                 )
