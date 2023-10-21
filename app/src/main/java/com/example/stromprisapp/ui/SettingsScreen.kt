@@ -35,6 +35,18 @@ import com.example.stromprisapp.ui.theme.White
 
 @Composable
 fun SettingsScreen( ) {
+    
+    val currentSone = LocalContext.current
+    val sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
+    valgtSone = sharedPrefSone.getString("valgtSone", valgtSone).toString()
+
+    val currentEur = LocalContext.current
+    val sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    valutaEUR = sharedPrefEur.getBoolean("valutaEUR", false)
+
+    val currentNOK = LocalContext.current
+    val sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
 
     var menyvalgValuta by remember {
         mutableStateOf(false)
@@ -42,10 +54,11 @@ fun SettingsScreen( ) {
     var menyValgSone by remember {
         mutableStateOf(false)
     }
-    val listeValuta = listOf("NOK", "€", "£", "$")
+    val listeValuta = listOf("NOK", "€")
 
     val listeSone = listOf("Oslo / Øst-Norge", "Kristiandsand /Sør-Norge", "Trondheim / Midt-Norge",
         "Tromsø / Nord-Norge", "Bergen / Vest-Norge")
+
 
     val iconSone = if( menyValgSone) {
         Icons.Filled.KeyboardArrowDown
@@ -57,19 +70,12 @@ fun SettingsScreen( ) {
     } else {
         Icons.Filled.KeyboardArrowUp
     }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Text(text = "Settings", fontSize = 40.sp, modifier = Modifier.padding(16.dp))
-
-
-        Button(
-            onClick = { }
-        ) {
-            Text(text = "Lys modus")
-        }
+        TekstMedBakgrunn(tekst = "Settings", fontSize = 40.sp, modifier = Modifier.padding(16.dp) )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -77,56 +83,91 @@ fun SettingsScreen( ) {
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Button(onClick = { menyValgSone = true } ) {
+            TextButton( onClick = { menyValgSone = true } ) {
 
-                Text("velg sone")
+                TekstMedBakgrunn(tekst =  velgSone)
             }
             DropdownMenu(expanded = menyValgSone, onDismissRequest = { menyValgSone = false } ) {
                 listeSone.forEachIndexed { index, item ->
                     DropdownMenuItem({
-                        Text(text = item)
-                    }, onClick = { },
-                        modifier = Modifier.background(Color.LightGray),
+                        TekstMedBakgrunn(tekst = item)
+                    }, onClick = {
+                      val element = listeSone[index]
+                        valgtSone = when (element) {
+                            "Oslo / Øst-Norge" -> "NO1"
+                            "Kristiandsand /Sør-Norge" -> "NO2"
+                            "Trondheim / Midt-Norge" -> "NO3"
+                            "Tromsø / Nord-Norge" -> "NO4"
+                            "Bergen / Vest-Norge" -> "NO5"
+                            else -> "Finner ikke valgt sone"
+                        }
+                        val editor = sharedPrefSone.edit()
+                        editor.putString("valgtSone", valgtSone)
+                        editor.apply()
+
+                        menyValgSone = false
+                        velgSone = element
+
+                    },
                         trailingIcon = {
                             Icon(iconSone, "", Modifier.clickable { menyValgSone = !menyValgSone})
                         })
                 }
             }
 
-            Button(onClick = { menyvalgValuta = true } ) {
-                Text(text = "velg valuta")
-            }
-            DropdownMenu(expanded = menyvalgValuta, onDismissRequest = { menyvalgValuta = false}, offset = DpOffset((-16).dp, (-16).dp)) {
-                listeValuta.forEachIndexed { index, item ->
-                    DropdownMenuItem({
-                        Text(text = item)
-                    }, onClick = { },
-                        modifier = Modifier.background(Color.LightGray),
-                        trailingIcon = {
-                            Icon(iconValuta, "", Modifier.clickable { menyvalgValuta = !menyvalgValuta})
-                        })
-                }
 
-            }
+            TextButton(onClick = { menyvalgValuta = true } ) {
+            TekstMedBakgrunn(tekst = velgValuta)
         }
+        DropdownMenu(expanded = menyvalgValuta, onDismissRequest = { menyvalgValuta = false}, offset = DpOffset((-16).dp, (-16).dp)) {
+            listeValuta.forEachIndexed { index, item ->
+                DropdownMenuItem({
+                    TekstMedBakgrunn(tekst = item)
+                }, onClick = {
+                    when (listeValuta[index]) {
+                        "NOK" -> {
+                            valutaNOK = true
+                            valutaEUR = false
+                        }
+                        "€" -> {
+                            valutaEUR = true
+                            valutaNOK = false
+                        }
+                        else ->  "ugyldig Valuta"
+                    }
+                  val endre = sharedPrefNOK.edit()
+                    endre.putBoolean("valutaNOK", valutaNOK)
+                    endre.apply()
+                    val endre1 = sharedPrefEur.edit()
+                    endre1.putBoolean("valutaEUR", valutaEUR)
+                    endre1.apply()
+                    menyvalgValuta = false
+
+                    velgValuta = listeValuta[index]
+                },
+                    trailingIcon = {
+                        Icon(iconValuta, "", Modifier.clickable { menyvalgValuta = !menyvalgValuta})
+                    })
+            }
+
+        }
+    }
     }
 }
 
 @Composable
 fun TekstMedBakgrunn(
-    backgroundColor: Color = bakgrunnsfarge,
     tekst: String,
     fontSize: TextUnit = 16.sp,
     fontWeight: FontWeight = FontWeight.Normal,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 
 ) {
-    val farge = kontrastFarge(backgroundColor)
-
    Text(text = tekst,
-       color = farge,
+       color = MaterialTheme.colorScheme.primary,
        fontSize = fontSize,
        fontWeight = fontWeight)
+
 }
 
 fun kontrastFarge(backgroundColor: Color, modifier: Modifier = Modifier): Color {
