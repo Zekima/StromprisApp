@@ -1,5 +1,8 @@
 package com.example.stromprisapp
 
+import androidx.compose.runtime.produceState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
@@ -44,6 +47,7 @@ object Utils {
             }
         }
     }
+
     fun convertTime(timeStart: String, format: String): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
         val date = inputFormat.parse(timeStart) ?: return "Invalid date"
