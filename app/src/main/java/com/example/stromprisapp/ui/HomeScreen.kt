@@ -54,7 +54,6 @@ fun HomeScreen() {
     val litenOverskrift = 20.sp; val pris = 50.sp; val valuta = 17.sp
     val datesize = 16.sp; val paddingMellomOverskrifter = 70.dp
     var mVa = sharedPrefMva.getBoolean("medMva", false)
-    var dagensPrisKr = 143.5; var medianPrisKr = 138.7
     val year =  LocalDate.now().year
     val month = LocalDate.now().month.value
     val day = LocalDateTime.now().dayOfMonth
@@ -63,26 +62,28 @@ fun HomeScreen() {
     var currTTimeMinute by remember { mutableStateOf(LocalTime.now().minute)}
     var hourHolder = 0
     var minuteHolder = 0
-    var s = formatNOKToString(list?.get(currTimeHour)?.nokPerKwh)
-    var median:Double  = 0.0
-    println("GETMEDIAN")
-
+    var median:String  = ""
+    var dagensPrisKr = formatNOKToString(list?.get(currTimeHour)?.nokPerKwh)
     val currentDate = LocalDate.now().toString()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val parsedDate = LocalDate.parse(currentDate, formatter)
 
     val isFirstDateOfMonth = parsedDate.dayOfMonth == 1
     val isFirstDateOfYear = parsedDate.dayOfYear == 1
+    var holder = 0
+    var helper = 0.0
 
-    LaunchedEffect(hourHolder) {
+    LaunchedEffect(holder) {
         while (true) {
             delay(1000)
             hourHolder = LocalTime.now().hour
             minuteHolder = LocalTime.now().minute
+            holder = LocalTime.now().second
+            println(currTimeHour)
             if (hourHolder>currTimeHour) {
-                if (minuteHolder> 2) {
+                if (minuteHolder > 2) {
                     currTimeHour = hourHolder
-                    s = formatNOKToString(list?.get(currTimeHour)?.nokPerKwh)
+                    dagensPrisKr = formatNOKToString(list?.get(currTimeHour)?.nokPerKwh)
                 }
             }
         }
@@ -110,7 +111,9 @@ fun HomeScreen() {
         )
         Row() {
             TekstMedBakgrunn(
-                tekst = if (!mVa) "$dagensPrisKr" else "${BigDecimal(dagensPrisKr*1.25).setScale(2, RoundingMode.HALF_UP).toString()}" ,
+                tekst = if (!mVa) {
+                    dagensPrisKr
+                } else BigDecimal(dagensPrisKr.toDouble()*1.25).setScale(2, RoundingMode.HALF_UP).toString(),
                 fontSize = pris
 
             )
@@ -121,7 +124,7 @@ fun HomeScreen() {
             )
         }
 
-        if (currTimeHour>14) {
+        if (currTimeHour>13) {
             TekstMedBakgrunn(tekst = "Median pris imorgen",
                 modifier = Modifier.padding(top = paddingMellomOverskrifter),
                 fontSize = litenOverskrift,
@@ -135,7 +138,7 @@ fun HomeScreen() {
                         (month + 1).toString(),
                         getLastDayOfMonth(year.toInt(), (month-1).toInt()).toString()
                     )
-
+                    median = formatNOKToString(calcMedian(list))
                 }
 
                 if (isFirstDateOfYear) {
@@ -143,9 +146,9 @@ fun HomeScreen() {
                     val list = fetchResult(
                         (year+1).toString(),
                         (1).toString(),
-                        getLastDayOfMonth((year + 1).toInt(), 1).toString()
+                        getLastDayOfMonth((year + 1), 1).toString()
                     )
-                    median = calcMedian(list)
+                    median = formatNOKToString(calcMedian(list))
                 }
 
 
@@ -156,12 +159,15 @@ fun HomeScreen() {
                     (day+1).toString()
                 )
                 if (list != null) {
-                    median = calcMedian(list)
+                    median = formatNOKToString(calcMedian(list))
                 }
 
                 TekstMedBakgrunn(
-                    tekst = formatNOKToString(median),
-                    fontSize = pris
+                    tekst =  if (!mVa) {
+                        median
+                    } else BigDecimal(median.toDouble()*1.25).setScale(2, RoundingMode.HALF_UP).toString(),
+                    fontSize = pris,
+
                 )
 
 
@@ -188,7 +194,7 @@ fun HomeScreen() {
                     (month - 1).toString(),
                     getLastDayOfMonth(year.toInt(), (month-1).toInt()).toString()
                 )
-
+                median = formatNOKToString(calcMedian(list))
             }
 
             if (isFirstDateOfYear) {
@@ -198,7 +204,7 @@ fun HomeScreen() {
                     (1).toString(),
                     getLastDayOfMonth((year - 1).toInt(), 1).toString()
                 )
-                median = calcMedian(list)
+                median = formatNOKToString(calcMedian(list))
             }
 
 
@@ -209,11 +215,13 @@ fun HomeScreen() {
                 (day-1).toString()
             )
             if (list != null) {
-                median = calcMedian(list)
+                median = formatNOKToString(calcMedian(list))
             }
 
             TekstMedBakgrunn(
-                tekst = if (!mVa) "$medianPrisKr" else "${BigDecimal(medianPrisKr*1.25).setScale(2, RoundingMode.HALF_UP).toString()}",
+                tekst = if (!mVa) {
+                    median
+                } else BigDecimal(median.toDouble()*1.25).setScale(2, RoundingMode.HALF_UP).toString(),
                 fontSize = pris
             )
             TekstMedBakgrunn(
@@ -255,7 +263,6 @@ fun formatNOKToString(d: Double?): String {
 fun getLastDayOfMonth(year: Int, month: Int): Int {
     val yearMonth = YearMonth.of(year, month)
     return yearMonth.lengthOfMonth()
-    println("!!!!!!!!!!")
 }
 
 fun calcMedian(list : List<PriceData>?): Double {
@@ -269,7 +276,7 @@ fun calcMedian(list : List<PriceData>?): Double {
             return (value/2)
         } else {
             var value: Double = list.get(list.size-1).nokPerKwh
-            return (value)
+            return value
         }
 
     } else {
