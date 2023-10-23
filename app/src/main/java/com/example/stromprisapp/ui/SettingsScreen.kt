@@ -89,8 +89,7 @@ fun SettingsScreen( ) {
         ) {
 
             TextButton( onClick = { menyValgSone = true } ) {
-
-                TekstMedBakgrunn(tekst =  velgSone)
+                TekstMedBakgrunn(tekst =  convertZoneCode(valgtSone))
             }
             DropdownMenu(expanded = menyValgSone, onDismissRequest = { menyValgSone = false } ) {
                 listeSone.forEachIndexed { index, item ->
@@ -173,6 +172,18 @@ fun TekstMedBakgrunn(
        fontSize = fontSize,
        fontWeight = fontWeight)
 
+}
+
+fun convertZoneCode(s : String) : String {
+    var b = when(s) {
+        "NO1"  -> "Oslo / Øst-Norge"
+         "NO2" -> "Kristiandsand /Sør-Norge"
+         "NO3" -> "Trondheim / Midt-Norge"
+         "NO4" -> "Tromsø / Nord-Norge"
+         "NO5" -> "Bergen / Vest-Norge"
+        else -> "Finner ikke."
+    }
+    return b;
 }
 
 fun kontrastFarge(backgroundColor: Color, modifier: Modifier = Modifier): Color {
