@@ -71,7 +71,7 @@ fun HomeScreen() {
     val isFirstDateOfMonth = parsedDate.dayOfMonth == 1
     val isFirstDateOfYear = parsedDate.dayOfYear == 1
     var holder = 0
-    var helper = 0.0
+
 
     LaunchedEffect(holder) {
         while (true) {
@@ -79,13 +79,14 @@ fun HomeScreen() {
             hourHolder = LocalTime.now().hour
             minuteHolder = LocalTime.now().minute
             holder = LocalTime.now().second
-            println(currTimeHour)
             if (hourHolder>currTimeHour) {
                 if (minuteHolder > 2) {
                     currTimeHour = hourHolder
                     dagensPrisKr = formatNOKToString(list?.get(currTimeHour)?.nokPerKwh)
+
                 }
             }
+
         }
     }
 
@@ -110,10 +111,11 @@ fun HomeScreen() {
             fontSize = datesize
         )
         Row() {
+
             TekstMedBakgrunn(
-                tekst = if (!mVa) {
-                    dagensPrisKr
-                } else BigDecimal(dagensPrisKr.toDouble()*1.25).setScale(2, RoundingMode.HALF_UP).toString(),
+                tekst = if (dagensPrisKr == "nu") dagensPrisKr
+                else if (!mVa) dagensPrisKr
+                else BigDecimal(dagensPrisKr.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
                 fontSize = pris
 
             )
@@ -124,7 +126,7 @@ fun HomeScreen() {
             )
         }
 
-        if (currTimeHour>13) {
+        if (currTimeHour>=13 && currTTimeMinute>=2) {
             TekstMedBakgrunn(tekst = "Median pris imorgen",
                 modifier = Modifier.padding(top = paddingMellomOverskrifter),
                 fontSize = litenOverskrift,
@@ -163,9 +165,9 @@ fun HomeScreen() {
                 }
 
                 TekstMedBakgrunn(
-                    tekst =  if (!mVa) {
-                        median
-                    } else BigDecimal(median.toDouble()*1.25).setScale(2, RoundingMode.HALF_UP).toString(),
+                    tekst =  if (median == "nu") median
+                    else if (!mVa) median
+                    else BigDecimal(median.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
                     fontSize = pris,
 
                 )
@@ -219,9 +221,9 @@ fun HomeScreen() {
             }
 
             TekstMedBakgrunn(
-                tekst = if (!mVa) {
-                    median
-                } else BigDecimal(median.toDouble()*1.25).setScale(2, RoundingMode.HALF_UP).toString(),
+                tekst = if (median == "nu") median
+                else if (!mVa) median
+                else BigDecimal(median.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
                 fontSize = pris
             )
             TekstMedBakgrunn(
@@ -246,7 +248,9 @@ fun MedMvaSwitch(sharedPreferences: SharedPreferences) : Boolean {
     Switch(
         checked = medMva.value,
         onCheckedChange = { newValue ->
-            sharedPreferences.edit().putBoolean("medMva", newValue).apply()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                sharedPreferences.edit().putBoolean("medMva", newValue).apply()
+            }
             medMva.value = newValue
         }
     )

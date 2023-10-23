@@ -41,10 +41,9 @@ import com.example.stromprisapp.ui.theme.White
 
 @Composable
 fun SettingsScreen( ) {
-    
     val currentSone = LocalContext.current
     val sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
-    valgtSone = sharedPrefSone.getString("valgtSone", valgtSone).toString()
+    Global.valgtSone = sharedPrefSone.getString("valgtSone", valgtSone).toString()
 
     val currentEur = LocalContext.current
     val sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
