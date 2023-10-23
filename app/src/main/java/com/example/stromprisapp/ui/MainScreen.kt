@@ -34,6 +34,18 @@ fun MainScreen() {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
 
+    val currentSone = LocalContext.current
+    val sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
+    Global.valgtSone = sharedPrefSone.getString("valgtSone", Global.valgtSone).toString()
+
+    val currentEur = LocalContext.current
+    val sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    Global.valutaEUR = sharedPrefEur.getBoolean("valutaEUR", false)
+
+    val currentNOK = LocalContext.current
+    val sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    Global.valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
