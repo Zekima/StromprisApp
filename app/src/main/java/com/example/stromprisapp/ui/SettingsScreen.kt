@@ -170,7 +170,8 @@ fun TekstMedBakgrunn(
    Text(text = tekst,
        color = MaterialTheme.colorScheme.primary,
        fontSize = fontSize,
-       fontWeight = fontWeight)
+       fontWeight = fontWeight,
+       modifier = modifier)
 
 }
 
