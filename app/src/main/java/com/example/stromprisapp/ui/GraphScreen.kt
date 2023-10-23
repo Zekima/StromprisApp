@@ -56,6 +56,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+const val bottomOffset = 50f;
 @Composable
 fun GraphScreen(navController: NavController) {
 
@@ -67,7 +68,6 @@ fun GraphScreen(navController: NavController) {
 
     var selectedHour by remember { mutableIntStateOf(currentHour) }
 
-
     var selectedDataPoint by remember { mutableStateOf<PriceData?>(null) }
     var selectedDataPointIndex by remember { mutableIntStateOf(0) }
     var boxSize by remember { mutableStateOf(Size(0f, 0f)) }
@@ -78,6 +78,7 @@ fun GraphScreen(navController: NavController) {
     var dataChanged by remember { mutableStateOf(false) }
 
     var activeButton by remember { mutableStateOf("today") }
+
 
     Column(modifier = Modifier.padding(top = 100.dp, start = 16.dp, end = 16.dp)) {
         Row(modifier = Modifier.padding(bottom = 5.dp)) {
@@ -249,7 +250,7 @@ fun GraphScreen(navController: NavController) {
                                 sortedData.forEachIndexed { i, priceData ->
                                     val x = i * xScale
                                     val y =
-                                        (size.height - (priceData.nokPerKwh - minPrice) * yScale).toFloat()
+                                        (size.height - (priceData.nokPerKwh - minPrice) * yScale - bottomOffset).toFloat()
 
                                     drawCircle(
                                         Color.DarkGray,
@@ -322,7 +323,7 @@ private fun generatePath(data: List<PriceData>, xScale: Float, yScale: Float, si
 
     data.forEachIndexed { i, priceData ->
         val x = i * xScale
-        val y = (size.height - (priceData.nokPerKwh - minPrice) * yScale).toFloat()
+        val y = (size.height - (priceData.nokPerKwh - minPrice) * yScale - bottomOffset).toFloat()
 
         if (i == 0) {
             path.moveTo(x, y)
@@ -342,13 +343,16 @@ fun PriceTooltip(
 ) {
     if (selectedDataPoint != null) {
 
+        val orePerKwhValue = selectedDataPoint.nokPerKwh * 100
         val displayPrice = if (includeFees) {
-            val convertedValue = Utils.includeFees(selectedDataPoint.nokPerKwh * 100).toDouble()
-            String.format("%.0f", convertedValue)
-
+            val feesIncludedValue = Utils.includeFees(orePerKwhValue).toDouble()
+            if (feesIncludedValue >= 100) String.format("%.0f", feesIncludedValue)
+            else String.format("%.2f", feesIncludedValue)
         } else {
-            String.format("%.2f", selectedDataPoint.nokPerKwh *100)
+            if (orePerKwhValue >= 100) String.format("%.0f", orePerKwhValue)
+            else String.format("%.2f", orePerKwhValue)
         }
+
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(
