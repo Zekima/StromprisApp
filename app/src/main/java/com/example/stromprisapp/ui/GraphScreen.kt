@@ -342,13 +342,16 @@ fun PriceTooltip(
 ) {
     if (selectedDataPoint != null) {
 
+        val orePerKwhValue = selectedDataPoint.nokPerKwh * 100
         val displayPrice = if (includeFees) {
-            val convertedValue = Utils.includeFees(selectedDataPoint.nokPerKwh * 100).toDouble()
-            String.format("%.0f", convertedValue)
-
+            val feesIncludedValue = Utils.includeFees(orePerKwhValue).toDouble()
+            if (feesIncludedValue >= 100) String.format("%.0f", feesIncludedValue)
+            else String.format("%.2f", feesIncludedValue)
         } else {
-            String.format("%.2f", selectedDataPoint.nokPerKwh *100)
+            if (orePerKwhValue >= 100) String.format("%.0f", orePerKwhValue)
+            else String.format("%.2f", orePerKwhValue)
         }
+
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(
