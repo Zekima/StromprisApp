@@ -18,7 +18,9 @@ fun fetchResult(year: String, month: String, day: String): List<PriceData>? {
             value = withContext(Dispatchers.IO) {
                 Utils.fetchApiData(year, month, day, valgtSone)
             }
+
         }
+        println(r.value.toString())
         return r.value;
 
 

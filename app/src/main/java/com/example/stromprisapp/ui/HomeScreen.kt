@@ -166,6 +166,7 @@ fun HomeScreen() {
 
                 TekstMedBakgrunn(
                     tekst =  if (median == "nu") median
+                    else if(median.isBlank()) ""
                     else if (!mVa) median
                     else BigDecimal(median.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
                     fontSize = pris,
@@ -222,6 +223,7 @@ fun HomeScreen() {
 
             TekstMedBakgrunn(
                 tekst = if (median == "nu") median
+                else if (median.isBlank()) ""
                 else if (!mVa) median
                 else BigDecimal(median.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
                 fontSize = pris
