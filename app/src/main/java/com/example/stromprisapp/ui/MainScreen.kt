@@ -24,8 +24,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.stromprisapp.ui.Global
 import com.example.stromprisapp.ui.HomeScreen
-import com.example.stromprisapp.ui.GraphScreen
 import com.example.stromprisapp.ui.SettingsScreen
+import com.example.stromprisapp.ui.graph.GraphScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
