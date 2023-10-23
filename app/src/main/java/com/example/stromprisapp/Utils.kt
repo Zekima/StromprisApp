@@ -1,8 +1,5 @@
 package com.example.stromprisapp
 
-import androidx.compose.runtime.produceState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
@@ -58,7 +55,7 @@ object Utils {
         return outputFormat.format(date)
     }
 
-    fun includeFees(grunnprisOrePerKwh: Double): String {
+    fun includeFees(grunnprisOrePerKwh: Double): Double {
         val mvaRate = 1.25 // 25%
         val nettleiePerKwh = 0.17 // 17 øre/kwh, som er 0.17 kr/kwh
         val avgiftPerKwh = 0.0891 // 8,91 øre/kwh, som er 0.0891 kr/kwh
@@ -71,9 +68,7 @@ object Utils {
         val totalMedMva = totalPrisKrPerKwh * mvaRate
 
         // Konverterer tilbake til øre
-        val totalOrePerKwh = totalMedMva * 100
-
-        return totalOrePerKwh.toString()
+        return totalMedMva * 100
     }
 
 }
