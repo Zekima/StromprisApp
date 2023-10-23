@@ -78,6 +78,7 @@ fun GraphScreen(navController: NavController) {
         DateSelector(
             activeButton = activeButton,
             onSelectToday = {
+                if (activeButton == "today") return@DateSelector
                 selectedDataPoint = null
                 selectedDate = currentDate
                 activeButton = "today"
@@ -85,6 +86,7 @@ fun GraphScreen(navController: NavController) {
                 shouldUpdateDataPoint = true
             },
             onSelectTomorrow = {
+                if (activeButton == "tomorrow") return@DateSelector
                 selectedDataPoint = null
                 val calendar = Calendar.getInstance()
                 calendar.add(Calendar.DAY_OF_YEAR, 1)
@@ -127,7 +129,7 @@ fun GraphScreen(navController: NavController) {
         var checked by remember { mutableStateOf(true) }
 
         // Sorter kun når fetchResult endrer seg
-        val sortedData = remember(fetchResult.value) {
+        var sortedData = remember(fetchResult.value) {
             fetchResult.value?.sortedBy { convertTime(it.timeStart, "HH") }
         }
 
