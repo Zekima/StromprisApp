@@ -73,28 +73,30 @@ fun HomeScreen() {
     var holder = 0
 
 
-    LaunchedEffect(holder) {
-        while (true) {
-            delay(1000)
-            hourHolder = LocalTime.now().hour
-            minuteHolder = LocalTime.now().minute
-            holder = LocalTime.now().second
-            if (hourHolder>currTimeHour) {
-                if (minuteHolder > 2) {
-                    currTimeHour = hourHolder
-                    dagensPrisKr = formatNOKToString(list?.get(currTimeHour)?.nokPerKwh)
 
-                }
-            }
-
-        }
-    }
 
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
+        LaunchedEffect(holder) {
+            while (true) {
+                delay(1000)
+                hourHolder = LocalTime.now().hour
+                minuteHolder = LocalTime.now().minute
+                holder = LocalTime.now().second
+                if (hourHolder>currTimeHour) {
+                    if (minuteHolder > 2) {
+                        currTimeHour = hourHolder
+                        dagensPrisKr = formatNOKToString(list?.get(currTimeHour)?.nokPerKwh)
+
+                    }
+                }
+
+            }
+        }
+
         TekstMedBakgrunn(
             tekst = "Strømpriser",
             modifier = Modifier.padding(top = paddingMellomOverskrifter),
@@ -171,7 +173,7 @@ fun HomeScreen() {
                     else BigDecimal(median.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
                     fontSize = pris,
 
-                )
+                    )
 
 
                 TekstMedBakgrunn(
