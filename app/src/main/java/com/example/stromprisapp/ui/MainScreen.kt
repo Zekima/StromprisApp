@@ -54,8 +54,8 @@ fun MainScreen() {
             startDestination = "home",
             modifier = Modifier
                 .padding(top = 16.dp)
-                .padding(start = 8.dp)
-                .padding(end = 8.dp)
+                .padding(start = 10.dp)
+                .padding(end = 10.dp)
                 .padding(bottom = 4.dp))
         {
             composable("home") { HomeScreen() }
