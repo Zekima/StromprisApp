@@ -55,20 +55,27 @@ object Utils {
         return outputFormat.format(date)
     }
 
-    fun includeFees(grunnprisOrePerKwh: Double): Double {
-        val mvaRate = 1.25 // 25%
-        val nettleiePerKwh = 0.17 // 17 øre/kwh, som er 0.17 kr/kwh
-        val avgiftPerKwh = 0.0891 // 8,91 øre/kwh, som er 0.0891 kr/kwh
+    fun includeFees(pricePerKwh: Double, currency: String): Double {
+        val mvaRate = 1.25
+        val nettleiePerKwh = 0.17
+        val avgiftPerKwh = 0.0891
+        val eurToNokExchangeRate = 11.8
 
-        // Konverterer grunnpris til kroner
-        val grunnprisKrPerKwh = grunnprisOrePerKwh / 100
+        val basePriceKrPerKwh = when (currency) {
+            "EUR" -> pricePerKwh * eurToNokExchangeRate
+            "NOK" -> pricePerKwh / 100
+            else -> throw IllegalArgumentException("Currency not found: $currency")
+        }
 
-        // Kalkuler total pris i kroner
-        val totalPrisKrPerKwh = grunnprisKrPerKwh + nettleiePerKwh + avgiftPerKwh
+        val totalPrisKrPerKwh = basePriceKrPerKwh + nettleiePerKwh + avgiftPerKwh
         val totalMedMva = totalPrisKrPerKwh * mvaRate
 
-        // Konverterer tilbake til øre
-        return totalMedMva * 100
+        return when (currency) {
+            "EUR" -> totalMedMva / eurToNokExchangeRate
+            "NOK" -> totalMedMva * 100
+            else -> throw IllegalArgumentException("Currency not found: $currency")
+        }
     }
+
 
 }
