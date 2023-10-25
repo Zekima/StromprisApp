@@ -1,6 +1,5 @@
 package com.example.stromprisapp.ui
 
-import com.example.stromprisapp.ui.Global
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -8,22 +7,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,28 +65,28 @@ fun HomeScreen() {
     var holder = 0
 
 
-    LaunchedEffect(holder) {
-        while (true) {
-            delay(1000)
-            hourHolder = LocalTime.now().hour
-            minuteHolder = LocalTime.now().minute
-            holder = LocalTime.now().second
-            if (hourHolder>currTimeHour) {
-                if (minuteHolder > 2) {
-                    currTimeHour = hourHolder
-                    dagensPrisKr = formatNOKToString(list?.get(currTimeHour)?.nokPerKwh)
 
-                }
-            }
-
-        }
-    }
 
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
+        LaunchedEffect(holder) {
+            while (!false) {
+                delay(1000)
+                hourHolder = LocalTime.now().hour
+                minuteHolder = LocalTime.now().minute
+                holder = LocalTime.now().second
+                if (hourHolder>currTimeHour) {
+                    if (minuteHolder > 2) {
+                        currTimeHour = hourHolder
+                        dagensPrisKr = formatNOKToString(list?.get(currTimeHour)?.nokPerKwh)
+                    }
+                }
+            }
+        }
+
         TekstMedBakgrunn(
             tekst = "Strømpriser",
             modifier = Modifier.padding(top = paddingMellomOverskrifter),
@@ -111,7 +103,6 @@ fun HomeScreen() {
             fontSize = datesize
         )
         Row() {
-
             TekstMedBakgrunn(
                 tekst = if (dagensPrisKr == "nu") dagensPrisKr
                 else if (!mVa) dagensPrisKr
@@ -132,6 +123,7 @@ fun HomeScreen() {
                 fontSize = litenOverskrift,
                 fontWeight = FontWeight.Bold
             )
+
             Row() {
                 if (isFirstDateOfMonth) {
                     println(12)
@@ -171,8 +163,7 @@ fun HomeScreen() {
                     else BigDecimal(median.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
                     fontSize = pris,
 
-                )
-
+                    )
 
                 TekstMedBakgrunn(
                     tekst = "øre/kWh",
@@ -195,7 +186,7 @@ fun HomeScreen() {
                 val list = fetchResult(
                     year.toString(),
                     (month - 1).toString(),
-                    getLastDayOfMonth(year.toInt(), (month-1).toInt()).toString()
+                    getLastDayOfMonth(year, (month-1)).toString()
                 )
                 median = formatNOKToString(calcMedian(list))
             }
@@ -205,7 +196,7 @@ fun HomeScreen() {
                 val list = fetchResult(
                     (year-1).toString(),
                     (1).toString(),
-                    getLastDayOfMonth((year - 1).toInt(), 1).toString()
+                    getLastDayOfMonth((year - 1), 1).toString()
                 )
                 median = formatNOKToString(calcMedian(list))
             }
@@ -235,7 +226,7 @@ fun HomeScreen() {
             )
         }
         Row( modifier = Modifier.padding(top = 10.dp) ) {
-            mVa = MedMvaSwitch(sharedPreferences = sharedPrefMva)
+            mVa = medMvaSwitch(sharedPreferences = sharedPrefMva)
             TekstMedBakgrunn(
                 tekst = " med mVa",
                 fontSize = datesize,
@@ -244,15 +235,14 @@ fun HomeScreen() {
         }
     }
 }
+
 @Composable
-fun MedMvaSwitch(sharedPreferences: SharedPreferences) : Boolean {
+fun medMvaSwitch(sharedPreferences: SharedPreferences) : Boolean {
     val medMva = remember { mutableStateOf(sharedPreferences.getBoolean("medMva", false)) }
     Switch(
         checked = medMva.value,
         onCheckedChange = { newValue ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-                sharedPreferences.edit().putBoolean("medMva", newValue).apply()
-            }
+            sharedPreferences.edit().putBoolean("medMva", newValue).apply()
             medMva.value = newValue
         }
     )
@@ -265,9 +255,10 @@ fun formatNOKToString(d: Double?): String {
     return String.format("%.2f",x)
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 fun getLastDayOfMonth(year: Int, month: Int): Int {
-    val yearMonth = YearMonth.of(year, month)
+    val yearMonth =
+        YearMonth.of(year, month)
     return yearMonth.lengthOfMonth()
 }
 

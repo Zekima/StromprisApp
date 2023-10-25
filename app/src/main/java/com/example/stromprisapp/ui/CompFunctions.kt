@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 fun fetchResult(year: String, month: String, day: String): List<PriceData>? {
 
         val r = produceState<List<PriceData>?>(initialValue = null) {
-            println(valgtSone.toString() + " her er zone")
+            println(valgtSone + " her er zone")
             value = withContext(Dispatchers.IO) {
                 Utils.fetchApiData(year, month, day, valgtSone)
             }
