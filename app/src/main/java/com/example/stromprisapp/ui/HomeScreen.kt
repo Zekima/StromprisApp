@@ -67,7 +67,7 @@ fun HomeScreen() {
 
 
 
-
+ StromprisAppTheme() {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -239,6 +239,7 @@ fun HomeScreen() {
         }
 
     }
+     }
 }
 
 @Composable
