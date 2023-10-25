@@ -76,6 +76,8 @@ object Utils {
             else -> throw IllegalArgumentException("Currency not found: $currency")
         }
     }
-
+    fun getValuta() : String {
+        return if (Global.valutaNOK) "NOK" else "£"
+    }
 
 }
