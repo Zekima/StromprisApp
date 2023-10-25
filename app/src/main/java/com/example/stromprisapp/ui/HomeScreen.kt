@@ -35,6 +35,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.stromprisapp.Utils
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -44,7 +45,7 @@ import android.content.SharedPreferences
 fun HomeScreen() {
     val sharedPrefMva = LocalContext.current.getSharedPreferences("mySharedPrefMva", Context.MODE_PRIVATE)
     val litenOverskrift = 20.sp; val pris = 50.sp; val valuta = 17.sp
-    val datesize = 16.sp; val paddingMellomOverskrifter = 70.dp
+    val datesize = 16.sp; val paddingMellomOverskrifter = 30.dp
     var mVa = sharedPrefMva.getBoolean("medMva", false)
     val year =  LocalDate.now().year
     val month = LocalDate.now().month.value
@@ -105,13 +106,13 @@ fun HomeScreen() {
         Row() {
             TekstMedBakgrunn(
                 tekst = if (dagensPrisKr == "nu") dagensPrisKr
-                else if (!mVa) dagensPrisKr
-                else BigDecimal(dagensPrisKr.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
+                else if (!mVa) getPrisValuta(dagensPrisKr.toDouble())
+                else getPrisValuta(dagensPrisKr.toDouble() * 1.25),
                 fontSize = pris
 
             )
             TekstMedBakgrunn(
-                tekst = "øre/kWh",
+                tekst = if(Utils.getValuta() == "NOK") "øre/kWh" else "euro/kWh",
                 modifier = Modifier.padding(top = 32.dp),
                 fontSize = valuta
             )
@@ -159,14 +160,12 @@ fun HomeScreen() {
                 TekstMedBakgrunn(
                     tekst =  if (median == "nu") median
                     else if(median.isBlank()) ""
-                    else if (!mVa) median
-                    else BigDecimal(median.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
+                    else if (!mVa) getPrisValuta(median.toDouble())
+                    else getPrisValuta(median.toDouble()*1.25),
                     fontSize = pris,
-
-                    )
-
+                )
                 TekstMedBakgrunn(
-                    tekst = "øre/kWh",
+                    tekst = if(Utils.getValuta() == "NOK") "øre/kWh" else "euro/kWh",
                     modifier = Modifier.padding(top = 32.dp),
                     fontSize = valuta
                 )
@@ -215,12 +214,12 @@ fun HomeScreen() {
             TekstMedBakgrunn(
                 tekst = if (median == "nu") median
                 else if (median.isBlank()) ""
-                else if (!mVa) median
-                else BigDecimal(median.toDouble() * 1.25).setScale(2, RoundingMode.HALF_UP).toString(),
+                else if (!mVa) getPrisValuta(median.toDouble())
+                else getPrisValuta(median.toDouble()*1.25),
                 fontSize = pris
             )
             TekstMedBakgrunn(
-                tekst = "øre/kWh",
+                tekst = if(Utils.getValuta() == "NOK") "øre/kWh" else "euro/kWh",
                 modifier = Modifier.padding(top = 32.dp),
                 fontSize = valuta
             )
@@ -254,7 +253,16 @@ fun formatNOKToString(d: Double?): String {
 
     return String.format("%.2f",x)
 }
+fun konverterTilEuro(x : Double) : Double {
+    return x / 11.84 / 100
+}
+fun getPrisValuta(x : Double): String {
+    val pris = if (Utils.getValuta() == "NOK") x
+    else konverterTilEuro(x)
 
+    return if (Utils.getValuta() == "NOK") String.format("%.2f", pris)
+    else String.format("%.3f", pris)
+}
 
 fun getLastDayOfMonth(year: Int, month: Int): Int {
     val yearMonth =
@@ -280,4 +288,3 @@ fun calcMedian(list : List<PriceData>?): Double {
         return 0.0
     }
 }
-
