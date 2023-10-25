@@ -74,7 +74,7 @@ fun HomeScreen() {
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         LaunchedEffect(holder) {
-            while (!false) {
+            while (true) {
                 delay(1000)
                 hourHolder = LocalTime.now().hour
                 minuteHolder = LocalTime.now().minute
@@ -224,14 +224,20 @@ fun HomeScreen() {
                 fontSize = valuta
             )
         }
-        Row( modifier = Modifier.padding(top = 10.dp) ) {
-            mVa = medMvaSwitch(sharedPreferences = sharedPrefMva)
-            TekstMedBakgrunn(
-                tekst = " med mVa",
-                fontSize = datesize,
-                modifier = Modifier.padding(top = 15.dp)
-            )
+
+        if (Global.valgtSone != "NO4") {
+            Row( modifier = Modifier.padding(top = 10.dp) ) {
+                mVa = medMvaSwitch(sharedPreferences = sharedPrefMva)
+                TekstMedBakgrunn(
+                    tekst = " med mVa",
+                    fontSize = datesize,
+                    modifier = Modifier.padding(top = 15.dp)
+                )
+            }
+        } else {
+            mVa = false
         }
+
     }
 }
 

@@ -48,6 +48,7 @@ fun MainScreen() {
 
     Box(
         modifier = Modifier.fillMaxSize()
+
     ) {
         NavHost(
             navController = navController,

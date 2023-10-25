@@ -1,5 +1,6 @@
 package com.example.stromprisapp
 
+import com.example.stromprisapp.ui.Global
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
