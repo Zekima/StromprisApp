@@ -121,7 +121,7 @@ fun SettingsScreen( ) {
 
 
             TextButton(onClick = { menyvalgValuta = true } ) {
-            TekstMedBakgrunn(tekst = velgValuta)
+            TekstMedBakgrunn(tekst = Utils.getValuta())
         }
         DropdownMenu(expanded = menyvalgValuta, onDismissRequest = { menyvalgValuta = false}, offset = DpOffset((-16).dp, (-16).dp)) {
             listeValuta.forEachIndexed { index, item ->
