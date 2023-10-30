@@ -17,15 +17,12 @@ object Global {
         } else {
             White
         }
-     lateinit var sharedPrefSone: SharedPreferences
 
-    lateinit var sharedPrefEur: SharedPreferences
-
-     lateinit var sharedPrefNOK : SharedPreferences
-
-    var valgtSone by mutableStateOf("velg sone")
+    var valgtSone by mutableStateOf("")
 
     var velgValuta by mutableStateOf("velg valuta")
+
+    var velgSone by mutableStateOf("velg sone")
 
     var valutaEUR by mutableStateOf(false)
     var valutaNOK by mutableStateOf(false)
