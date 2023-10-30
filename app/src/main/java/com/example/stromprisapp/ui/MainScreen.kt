@@ -46,44 +46,48 @@ fun MainScreen() {
     val sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
     Global.valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
 
-    Box(
-        modifier = Modifier.fillMaxSize()
 
-    ) {
-        NavHost(
-            navController = navController,
-            startDestination = "home",
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .padding(start = 10.dp)
-                .padding(end = 10.dp)
-                .padding(bottom = 4.dp))
-        {
-            composable("home") { HomeScreen() }
-            composable("graph") { GraphScreen(navController) }
-            composable("settings") { SettingsScreen() }
-        }
+        Box(
+            modifier = Modifier.fillMaxSize()
 
-        NavigationBar(
-
-            modifier = Modifier.align(Alignment.BottomCenter)
         ) {
-            NavigationBarItem(
-                selected = currentRoute == "home",
-                label = { Text("Hjem") },
-                onClick = { navController.navigate("home") },
-                icon = { Icon(Icons.Filled.Home, contentDescription = "Hjem") })
-            NavigationBarItem(
-                selected = currentRoute == "graph",
-                label = { Text("Graf") },
-                onClick = { navController.navigate("graph") },
-                icon = { Icon(Icons.Filled.Star, contentDescription = "Graf") })
-            NavigationBarItem(
-                selected = currentRoute == "settings",
-                label = { Text("Innstillinger") },
-                onClick = { navController.navigate("settings") },
-                icon = { Icon(Icons.Filled.Settings, contentDescription = "Innstillinger") })
+            NavHost(
+                navController = navController,
+                startDestination = "home",
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .padding(start = 10.dp)
+                    .padding(end = 10.dp)
+                    .padding(bottom = 4.dp))
+            {
+                composable("home") { HomeScreen() }
+                composable("graph") { GraphScreen(navController) }
+                composable("settings") { SettingsScreen() }
+            }
+
+            NavigationBar(
+
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                NavigationBarItem(
+                    selected = currentRoute == "home",
+                    label = { Text("Hjem") },
+                    onClick = { navController.navigate("home") },
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "Hjem") })
+                NavigationBarItem(
+                    selected = currentRoute == "graph",
+                    label = { Text("Graf") },
+                    onClick = { navController.navigate("graph") },
+                    icon = { Icon(Icons.Filled.Star, contentDescription = "Graf") })
+                NavigationBarItem(
+                    selected = currentRoute == "settings",
+                    label = { Text("Innstillinger") },
+                    onClick = { navController.navigate("settings") },
+                    icon = { Icon(Icons.Filled.Settings, contentDescription = "Innstillinger") })
+            }
         }
-    }
+
+
+
 }
 

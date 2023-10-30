@@ -1,6 +1,8 @@
 package com.example.stromprisapp.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.stromprisapp.PriceData
+import com.example.stromprisapp.Utils
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -31,10 +34,6 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Date
-import android.content.Context
-import android.content.SharedPreferences
-import com.example.stromprisapp.Utils
-import com.example.stromprisapp.ui.theme.StromprisAppTheme
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -71,7 +70,7 @@ fun HomeScreen() {
 
 
 
- StromprisAppTheme() {
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -79,7 +78,7 @@ fun HomeScreen() {
     {
         LaunchedEffect(holder) {
             while (true) {
-                delay(1000)
+                delay(10000)
                 hourHolder = LocalTime.now().hour
                 minuteHolder = LocalTime.now().minute
                 holder = LocalTime.now().second
@@ -115,7 +114,8 @@ fun HomeScreen() {
             TekstMedBakgrunn(
                 tekst = if (dagensPrisKr == "nu") dagensPrisKr
                 else if (!mVa) dagensPrisKr
-                else (dagensPrisKr.toDouble() * 1.25).toString(),
+                else if (mVa) String.format("%.2f",(dagensPrisKr.toDouble()*1.25))
+                else "ikke funnet",
                 fontSize = pris
 
             )
@@ -169,7 +169,7 @@ fun HomeScreen() {
                     tekst =  if (median == "nu") median
                     else if(median.isBlank()) ""
                     else if (!mVa) median
-                    else (median.toDouble()*1.25).toString(),
+                    else String.format("%.2f",(median.toDouble()*1.25)),
                     fontSize = pris,
                 )
                 TekstMedBakgrunn(
@@ -223,7 +223,7 @@ fun HomeScreen() {
                 tekst = if (median == "nu") median
                 else if (median.isBlank()) ""
                 else if (!mVa) median
-                else (median.toDouble()*1.25).toString(),
+                else String.format("%.2f",(median.toDouble()*1.25)),
                 fontSize = pris
             )
             TekstMedBakgrunn(
@@ -232,6 +232,8 @@ fun HomeScreen() {
                 fontSize = valuta
             )
         }
+
+        println(mVa.toString())
 
         if (Global.valgtSone != "NO4") {
             Row( modifier = Modifier.padding(top = 10.dp) ) {
@@ -246,13 +248,16 @@ fun HomeScreen() {
             mVa = false
         }
 
+
+
     }
-     }
+
 }
 
 @Composable
 fun medMvaSwitch(sharedPreferences: SharedPreferences) : Boolean {
     val medMva = remember { mutableStateOf(sharedPreferences.getBoolean("medMva", false)) }
+    println(sharedPreferences.getBoolean("medMva",false).toString())
     Switch(
         checked = medMva.value,
         onCheckedChange = { newValue ->
@@ -260,6 +265,7 @@ fun medMvaSwitch(sharedPreferences: SharedPreferences) : Boolean {
             medMva.value = newValue
         }
     )
+    println(sharedPreferences.getBoolean("medMva",false).toString())
     return sharedPreferences.getBoolean("medMva", false)
 }
 
