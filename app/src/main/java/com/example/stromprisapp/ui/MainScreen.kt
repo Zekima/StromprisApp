@@ -49,19 +49,13 @@ fun MainScreen() {
     sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
     Global.valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
 
-     val startDestination = if(valgtSone == "velg sone") {
-        "settings"
-    } else {
-        "home"
-    }
-     
     Box(
         modifier = Modifier.fillMaxSize()
 
     ) {
         NavHost(
             navController = navController,
-            startDestination = startDestination,
+            startDestination = "home",
             modifier = Modifier
                 .padding(top = 16.dp)
                 .padding(start = 10.dp)
