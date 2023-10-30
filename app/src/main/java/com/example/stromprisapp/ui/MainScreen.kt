@@ -26,6 +26,9 @@ import com.example.stromprisapp.ui.Global
 import com.example.stromprisapp.ui.HomeScreen
 import com.example.stromprisapp.ui.SettingsScreen
 import com.example.stromprisapp.ui.graph.GraphScreen
+import com.example.stromprisapp.ui.Global.sharedPrefEur
+import com.example.stromprisapp.ui.Global.sharedPrefNOK
+import com.example.stromprisapp.ui.Global.sharedPrefSone
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -35,15 +38,15 @@ fun MainScreen() {
     val currentRoute = navBackStackEntry.value?.destination?.route
 
     val currentSone = LocalContext.current
-    val sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
+     sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
     Global.valgtSone = sharedPrefSone.getString("valgtSone", Global.valgtSone).toString()
 
     val currentEur = LocalContext.current
-    val sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
     Global.valutaEUR = sharedPrefEur.getBoolean("valutaEUR", false)
 
     val currentNOK = LocalContext.current
-    val sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
     Global.valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
 
     Box(
