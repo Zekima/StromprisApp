@@ -56,29 +56,31 @@ object Utils {
         return outputFormat.format(date)
     }
 
-    fun includeFees(pricePerKwh: Double, currency: String): Double {
+    fun includeFees(pricePerKwh: Double): Double {
         val mvaRate = 1.25
         val nettleiePerKwh = 0.17
         val avgiftPerKwh = 0.0891
         val eurToNokExchangeRate = 11.8
+        val currency = getValuta()
 
-        val basePriceKrPerKwh = when (currency) {
-            "EUR" -> pricePerKwh * eurToNokExchangeRate
-            "NOK" -> pricePerKwh / 100
-            else -> throw IllegalArgumentException("Currency not found: $currency")
+        val priceInNok = if (getValuta() == "NOK") {
+            pricePerKwh
+        } else {
+            pricePerKwh * eurToNokExchangeRate
         }
 
-        val totalPrisKrPerKwh = basePriceKrPerKwh + nettleiePerKwh + avgiftPerKwh
+        val totalPrisKrPerKwh = priceInNok + nettleiePerKwh + avgiftPerKwh
         val totalMedMva = totalPrisKrPerKwh * mvaRate
 
         return when (currency) {
-            "EUR" -> totalMedMva / eurToNokExchangeRate
-            "NOK" -> totalMedMva * 100
+            "EUR" -> (totalMedMva / eurToNokExchangeRate)
+            "NOK" -> totalMedMva
             else -> throw IllegalArgumentException("Currency not found: $currency")
         }
     }
+
     fun getValuta() : String {
-        return if (Global.valutaNOK) "NOK" else "£"
+        return if (Global.valutaNOK) "NOK" else "EUR"
     }
 
 }

@@ -46,24 +46,14 @@ fun GraphScreen(navController: NavController) {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val currentDate = remember { dateFormat.format(Date()) }
 
-    val hourFormat = SimpleDateFormat("HH", Locale.getDefault())
-    val currentHour = remember { hourFormat.format(Date()).toInt() }
-
-    var selectedHour by remember { mutableIntStateOf(currentHour) }
-
     var selectedDataPoint by remember { mutableStateOf<PriceData?>(null) }
     var selectedDataPointIndex by remember { mutableIntStateOf(0) }
-    var boxSize by remember { mutableStateOf(Size(0f, 0f)) }
-
 
     var selectedDate by remember { mutableStateOf(currentDate) }
 
     var activeButton by remember { mutableStateOf("today") }
 
     var isLoading by remember { mutableStateOf(false) }
-
-    var shouldUpdateDataPoint by remember { mutableStateOf(true) }
-    var showTooltip by remember { mutableStateOf(false) }
 
     var sortedData by remember { mutableStateOf<List<PriceData>?>(null) }
 
@@ -78,7 +68,6 @@ fun GraphScreen(navController: NavController) {
                 selectedDataPoint = null
                 selectedDate = currentDate
                 activeButton = "today"
-                shouldUpdateDataPoint = true
             },
             onSelectTomorrow = {
                 if (activeButton == "tomorrow") return@DateSelector
@@ -87,7 +76,6 @@ fun GraphScreen(navController: NavController) {
                 calendar.add(Calendar.DAY_OF_YEAR, 1)
                 selectedDate = dateFormat.format(calendar.time)
                 activeButton = "tomorrow"
-                shouldUpdateDataPoint = true
             }
         )
 
@@ -117,6 +105,7 @@ fun GraphScreen(navController: NavController) {
                 selectedDataPointIndex = newIndex
             },
             isLoading = isLoading,
+            activeButton = activeButton,
             checked = checked
         )
 

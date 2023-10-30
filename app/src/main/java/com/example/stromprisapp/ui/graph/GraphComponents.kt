@@ -20,8 +20,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,10 +46,14 @@ import androidx.navigation.NavController
 import com.example.stromprisapp.PriceData
 import com.example.stromprisapp.Utils
 import com.example.stromprisapp.Utils.fetchApiData
+import com.example.stromprisapp.Utils.getValuta
 import com.example.stromprisapp.Utils.includeFees
 import com.example.stromprisapp.ui.Global.valgtSone
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun RegionRow(navController: NavController) {
@@ -107,14 +114,19 @@ fun PriceTooltip(
 
         // eur/nok revamp trengs
 
-        val orePerKwhValue = selectedDataPoint.nokPerKwh * 100
+        val pricePerKwhValue = if (getValuta() == "NOK") {
+            selectedDataPoint.nokPerKwh * 100
+        } else {
+            selectedDataPoint.eurPerKwh * 100
+        }
+
         val displayPrice = if (includeFees) {
-            val feesIncludedValue = Utils.includeFees(orePerKwhValue, "NOK")
+            val feesIncludedValue = includeFees(pricePerKwhValue)
             if (feesIncludedValue >= 100) String.format("%.0f", feesIncludedValue)
             else String.format("%.2f", feesIncludedValue)
         } else {
-            if (orePerKwhValue >= 100) String.format("%.0f", orePerKwhValue)
-            else String.format("%.2f", orePerKwhValue)
+            if (pricePerKwhValue >= 100) String.format("%.0f", pricePerKwhValue)
+            else String.format("%.2f", pricePerKwhValue)
         }
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -126,7 +138,7 @@ fun PriceTooltip(
                     )
                     .clip(RoundedCornerShape(8.dp))
                     .background(androidx.compose.ui.graphics.Color.Black)
-                    .width(60.dp)
+                    .width(65.dp)
                     .height(45.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -139,7 +151,7 @@ fun PriceTooltip(
                     Text(
                         textAlign = TextAlign.Center,
                         color = androidx.compose.ui.graphics.Color.White,
-                        text = "$displayPrice øre"
+                        text = displayPrice + if (getValuta() == "NOK") " øre" else " cent"
                     )
                 }
             }
@@ -183,19 +195,28 @@ fun GraphContent(
     selectedDataPointIndex: Int,
     onSelectedDataPointIndexChanged: (Int) -> Unit,
     isLoading: Boolean,
+    activeButton: String,
     checked: Boolean
 ) {
     val hitboxRecs = remember { mutableStateOf(ArrayList<Rect>()) }
     val pointRecs = remember { mutableStateOf(ArrayList<Rect>()) }
 
+    val hourFormat = SimpleDateFormat("HH", Locale.getDefault())
+    val currentHour = remember { hourFormat.format(Date()).toInt() }
+    var selectedHour by remember { mutableIntStateOf(currentHour) }
+
     var path: Path? = null
 
     val boxSize = remember { mutableStateOf(Size(0f, 0f)) }
+
+    var showTooltip by remember { mutableStateOf(false) }
 
     var xScale = 0f
     var yScale = 0f
     var minPrice = 0f
     var maxPrice: Float
+
+    showTooltip = false;
 
     Box(
         modifier = Modifier
@@ -262,14 +283,20 @@ fun GraphContent(
 
                         val priceLabelValue = if (checked) {
                             includeFees(
-                                (minPrice + i * yAxisInterval).toDouble() * 100,
-                                "NOK"
+                                (minPrice + i * yAxisInterval).toDouble() * 100
                             ).toFloat()
                         } else {
                             (minPrice + i * yAxisInterval) * 100
                         }
 
-                        val priceLabel = String.format("%.0f", priceLabelValue)
+
+                        val priceLabelValueEur = priceLabelValue / 11.8
+
+                        val priceLabel =  if (getValuta() == "NOK") {
+                            String.format("%.0f", priceLabelValue)
+                        } else {
+                            String.format("%.0f", priceLabelValueEur)
+                        }
 
                         val y =
                             boxSize.value.height - ((minPrice + i * yAxisInterval) - minPrice) * yScale - 50f
@@ -333,17 +360,18 @@ fun GraphContent(
             }
     ) {
 
-        // legg til auto tooltip popup for idag
+        LaunchedEffect(sortedData) {
+            showTooltip = true
+        }
 
-//        if (shouldUpdateDataPoint && activeButton === "today" && sortedData !== null && selectedDataPoint === null) {
-//            if ((selectedHour) < sortedData.size) {
-//                selectedDataPoint = sortedData[selectedHour]
-//                selectedDataPointIndex = selectedHour
-//            } else {
-//                selectedDataPoint = null
-//            }
-//            shouldUpdateDataPoint = false
-//        }
+        if (showTooltip && activeButton === "today" && sortedData !== null && selectedDataPoint === null) {
+            if ((selectedHour) < sortedData.size) {
+                onSelectedDataPointChanged(sortedData[selectedHour])
+                onSelectedDataPointIndexChanged(selectedHour)
+            } else {
+                onSelectedDataPointChanged(null)
+            }
+        }
 
         if (!isLoading && selectedDataPoint !== null && selectedDataPointIndex < pointRecs.value.size) {
             val currentRect = pointRecs.value[selectedDataPointIndex]
