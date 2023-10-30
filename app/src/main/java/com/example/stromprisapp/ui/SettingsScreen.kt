@@ -30,10 +30,12 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.stromprisapp.ui.Global.sharedPrefEur
+import com.example.stromprisapp.ui.Global.sharedPrefNOK
+import com.example.stromprisapp.ui.Global.sharedPrefSone
 import com.example.stromprisapp.ui.Global.valgtSone
 import com.example.stromprisapp.ui.Global.valutaEUR
 import com.example.stromprisapp.ui.Global.valutaNOK
-import com.example.stromprisapp.ui.Global.velgSone
 import com.example.stromprisapp.ui.Global.velgValuta
 import com.example.stromprisapp.ui.theme.Black
 import com.example.stromprisapp.ui.theme.White
@@ -41,17 +43,6 @@ import com.example.stromprisapp.ui.theme.White
 
 @Composable
 fun SettingsScreen( ) {
-    val currentSone = LocalContext.current
-    val sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
-    Global.valgtSone = sharedPrefSone.getString("valgtSone", valgtSone).toString()
-
-    val currentEur = LocalContext.current
-    val sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
-    valutaEUR = sharedPrefEur.getBoolean("valutaEUR", false)
-
-    val currentNOK = LocalContext.current
-    val sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
-    valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
 
     var menyvalgValuta by remember {
         mutableStateOf(false)
@@ -76,86 +67,110 @@ fun SettingsScreen( ) {
         Icons.Filled.KeyboardArrowUp
     }
 
-    Column(
+   Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TekstMedBakgrunn(tekst = "Settings", fontSize = 40.sp, modifier = Modifier.padding(16.dp) )
+        TekstMedBakgrunn(tekst = "Settings", fontSize = 50.sp, modifier = Modifier.padding(top =16.dp, bottom = 90.dp) )
 
-        Row(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalAlignment = Alignment.CenterHorizontally,
+           // verticalAlignment = Alignment.CenterVertically
         ) {
 
-            TextButton( onClick = { menyValgSone = true } ) {
-                TekstMedBakgrunn(tekst =  convertZoneCode(valgtSone))
-            }
-            DropdownMenu(expanded = menyValgSone, onDismissRequest = { menyValgSone = false } ) {
-                listeSone.forEachIndexed { index, item ->
-                    DropdownMenuItem({
-                        TekstMedBakgrunn(tekst = item)
-                    }, onClick = {
-                      val element = listeSone[index]
-                        valgtSone = when (element) {
-                            "Oslo / Øst-Norge" -> "NO1"
-                            "Kristiandsand /Sør-Norge" -> "NO2"
-                            "Trondheim / Midt-Norge" -> "NO3"
-                            "Tromsø / Nord-Norge" -> "NO4"
-                            "Bergen / Vest-Norge" -> "NO5"
-                            else -> "Finner ikke valgt sone"
-                        }
-                        val editor = sharedPrefSone.edit()
-                        editor.putString("valgtSone", valgtSone)
-                        editor.apply()
+            TekstMedBakgrunn(tekst = "Her kan du velge de \n ulike sonene", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            Box(
+                modifier = Modifier
+                    .background(Color(color = MaterialTheme.colorScheme.primary.toArgb()), CircleShape)
 
-                        menyValgSone = false
-                        velgSone = element
+            ) {
+                
+                Button(onClick = { menyValgSone = true }) {
+                    TekstMedBakgrunn(tekst = convertZoneCode(valgtSone), fontSize = 25.sp)
+                }
+                DropdownMenu(expanded = menyValgSone, onDismissRequest = { menyValgSone = false }) {
+                    listeSone.forEachIndexed { index, item ->
+                        DropdownMenuItem({
+                            TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                        }, onClick = {
+                            val element = listeSone[index]
+                            valgtSone = when (element) {
+                                "Oslo Øst-Norge" -> "NO1"
+                                "Kristiandsand Sør-Norge" -> "NO2"
+                                "Trondheim Midt-Norge" -> "NO3"
+                                "Tromsø Nord-Norge" -> "NO4"
+                                "Bergen Vest-Norge" -> "NO5"
+                                else -> "Finner ikke valgt sone"
+                            }
+                          val editor = sharedPrefSone.edit()
+                           editor.putString("valgtSone", valgtSone)
+                            editor.apply()
 
-                    },
-                        trailingIcon = {
-                            Icon(iconSone, "", Modifier.clickable { menyValgSone = !menyValgSone})
-                        })
+                            menyValgSone = false
+                            valgtSone = element
+                        },
+                            trailingIcon = {
+                                Icon(
+                                    iconSone,
+                                    "",
+                                    Modifier.clickable { menyValgSone = !menyValgSone })
+                            })
+                    }
                 }
             }
 
+            Spacer(modifier = Modifier.height(150.dp))
+            TekstMedBakgrunn(tekst = "Her kan du velge valuta", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            Box(
+                modifier = Modifier
+                   // .width(100.dp)
+                   // .height(100.dp)
+                    .background(Color(color = MaterialTheme.colorScheme.primary.toArgb()), CircleShape)
+            ) {
+                Button(onClick = { menyvalgValuta = true }) {
+                    TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 35.sp)
+                }
+                DropdownMenu(
+                    expanded = menyvalgValuta,
+                    onDismissRequest = { menyvalgValuta = false }) {
+                    listeValuta.forEachIndexed { index, item ->
+                        DropdownMenuItem({
+                            TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                        }, onClick = {
+                            when (listeValuta[index]) {
+                                "NOK" -> {
+                                    valutaNOK = true
+                                    valutaEUR = false
+                                }
+                                "€" -> {
+                                    valutaEUR = true
+                                    valutaNOK = false
+                                }
 
-            TextButton(onClick = { menyvalgValuta = true } ) {
-            TekstMedBakgrunn(tekst = Utils.getValuta())
-        }
-        DropdownMenu(expanded = menyvalgValuta, onDismissRequest = { menyvalgValuta = false}, offset = DpOffset((-16).dp, (-16).dp)) {
-            listeValuta.forEachIndexed { index, item ->
-                DropdownMenuItem({
-                    TekstMedBakgrunn(tekst = item)
-                }, onClick = {
-                    when (listeValuta[index]) {
-                        "NOK" -> {
-                            valutaNOK = true
-                            valutaEUR = false
-                        }
-                        "€" -> {
-                            valutaEUR = true
-                            valutaNOK = false
-                        }
-                        else ->  "ugyldig Valuta"
+                                else -> "ugyldig Valuta"
+                            }
+                            val endre = sharedPrefNOK.edit()
+                            endre.putBoolean("valutaNOK", valutaNOK)
+                            endre.apply()
+                            val endre1 = sharedPrefEur.edit()
+                            endre1.putBoolean("valutaEUR", valutaEUR)
+                            endre1.apply()
+                            menyvalgValuta = false
+
+                            velgValuta = listeValuta[index]
+                        },
+                            trailingIcon = {
+                                Icon(
+                                    iconValuta,
+                                    "",
+                                    Modifier.clickable { menyvalgValuta = !menyvalgValuta })
+                            })
                     }
-                    val endre = sharedPrefNOK.edit()
-                    endre.putBoolean("valutaNOK", valutaNOK)
-                    endre.apply()
-                    val endre1 = sharedPrefEur.edit()
-                    endre1.putBoolean("valutaEUR", valutaEUR)
-                    endre1.apply()
-                    menyvalgValuta = false
 
-                    velgValuta = listeValuta[index]
-                },
-                    trailingIcon = {
-                        Icon(iconValuta, "", Modifier.clickable { menyvalgValuta = !menyvalgValuta})
-                    })
+                }
             }
-
         }
-    }
     }
 }
 
