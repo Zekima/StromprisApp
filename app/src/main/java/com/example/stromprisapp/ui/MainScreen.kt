@@ -35,16 +35,23 @@ fun MainScreen() {
     val currentRoute = navBackStackEntry.value?.destination?.route
 
     val currentSone = LocalContext.current
-    val sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
-    Global.valgtSone = sharedPrefSone.getString("valgtSone", Global.valgtSone).toString()
+    sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
+    valgtSone = sharedPrefSone.getString("valgtSone", Global.valgtSone).toString()
 
     val currentEur = LocalContext.current
-    val sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
-    Global.valutaEUR = sharedPrefEur.getBoolean("valutaEUR", false)
+    sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    valutaEUR = sharedPrefEur.getBoolean("valutaEUR", false)
 
     val currentNOK = LocalContext.current
-    val sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
-    Global.valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
+    sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
+
+
+    val startDestination = if(valgtSone == "velg sone") {
+        "settings"
+    } else {
+        "home"
+    }
 
 
         Box(
@@ -53,7 +60,7 @@ fun MainScreen() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = "home",
+                startDestination = startDestination,
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .padding(start = 10.dp)
