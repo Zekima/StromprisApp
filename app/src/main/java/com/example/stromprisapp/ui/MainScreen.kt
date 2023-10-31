@@ -23,9 +23,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.stromprisapp.ui.Global
+import com.example.stromprisapp.ui.Global.sharedPrefEur
+import com.example.stromprisapp.ui.Global.sharedPrefNOK
+import com.example.stromprisapp.ui.Global.sharedPrefSone
+import com.example.stromprisapp.ui.Global.valgtSone
+import com.example.stromprisapp.ui.Global.valutaEUR
+import com.example.stromprisapp.ui.Global.valutaNOK
 import com.example.stromprisapp.ui.HomeScreen
 import com.example.stromprisapp.ui.SettingsScreen
 import com.example.stromprisapp.ui.graph.GraphScreen
+import com.example.stromprisapp.ui.theme.StromprisAppTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -53,7 +60,7 @@ fun MainScreen() {
         "home"
     }
 
-
+StromprisAppTheme {
         Box(
             modifier = Modifier.fillMaxSize()
 
@@ -93,7 +100,7 @@ fun MainScreen() {
                     icon = { Icon(Icons.Filled.Settings, contentDescription = "Innstillinger") })
             }
         }
-
+}
 
 
 }
