@@ -1,4 +1,5 @@
 package com.example.stromprisapp.ui
+import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,13 +18,17 @@ object Global {
         } else {
             White
         }
+    lateinit var sharedPrefSone: SharedPreferences
 
-    var valgtSone by mutableStateOf("")
+    lateinit var sharedPrefEur: SharedPreferences
+
+    lateinit var sharedPrefNOK : SharedPreferences
+
+    var valgtSone by mutableStateOf("velg sone")
 
     var velgValuta by mutableStateOf("velg valuta")
-
-    var velgSone by mutableStateOf("velg sone")
 
     var valutaEUR by mutableStateOf(false)
     var valutaNOK by mutableStateOf(false)
 }
+
