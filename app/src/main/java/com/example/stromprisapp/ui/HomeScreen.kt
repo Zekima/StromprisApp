@@ -36,7 +36,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("SimpleDateFormat", "CoroutineCreationDuringComposition")
 @Preview
 @Composable
@@ -48,7 +47,7 @@ fun HomeScreen() {
     val year =  LocalDate.now().year
     val month = LocalDate.now().month.value
     val day = LocalDateTime.now().dayOfMonth
-    val list = fetchResult(year = year.toString(), month = month.toString(), day = day.toString())
+    val list = fetchResult(year = year.toString(), month = month.toString(), day.toString())
     var currTimeHour by remember { mutableStateOf(LocalTime.now().hour) }
     var currTTimeMinute by remember { mutableStateOf(LocalTime.now().minute)}
     var hourHolder = 0
@@ -284,34 +283,42 @@ fun getLastDayOfMonth(year: Int, month: Int): Int {
 fun calcMedian(list : List<PriceData>?): Double {
     println("AAAAAAAA")
     if (list != null) {
+        var h1 = 0.0
+        var h2 = 0.0
+        val listSize = (list?.size?.div(2))?.minus(1)
         if (Utils.getValuta() == "NOK") {
-            if (list.size %2 == 1 ) {
-                var value:Double = 0.0
-                for (x:PriceData in list) {
-                    value += x.nokPerKwh
+            if (list.size % 2 == 1) {
+                list.forEachIndexed { index, priceData ->
+                    if (index == listSize) {
+                        h1 = priceData.nokPerKwh
+                    } else if (index == list.size-1) {
+                        h2 = priceData.nokPerKwh
+                    }
+
+                    return (h1+h2)/2
                 }
-                return (value/2)
+
             } else {
-                var value: Double = list.get(list.size-1).nokPerKwh
+                var value: Double = list.get(list.size - 1).nokPerKwh
                 return value
             }
         } else {
-            if (list.size %2 == 1 ) {
-                var value:Double = 0.0
-                for (x:PriceData in list) {
-                    value += x.eurPerKwh
+                if (list.size % 2 == 1) {
+                    list.forEachIndexed { index, priceData ->
+                        if (index == listSize) {
+                            h1 = priceData.eurPerKwh
+                        } else if (index == list.size-1) {
+                            h2 = priceData.eurPerKwh
+                        }
+
+                    }
+                    return (h1+h2)/2
+                } else {
+                    var value: Double = list.get(list.size - 1).eurPerKwh
+                    return value
                 }
-                return (value/2)
-            } else {
-                var value: Double = list.get(list.size-1).eurPerKwh
-                return value
-            }
+
         }
-
-
-
-    } else {
-        return 0.0
     }
-
+    return 1.1
 }

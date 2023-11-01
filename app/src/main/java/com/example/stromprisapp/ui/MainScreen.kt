@@ -1,7 +1,6 @@
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,7 +26,7 @@ import com.example.stromprisapp.ui.HomeScreen
 import com.example.stromprisapp.ui.SettingsScreen
 import com.example.stromprisapp.ui.graph.GraphScreen
 
-@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
