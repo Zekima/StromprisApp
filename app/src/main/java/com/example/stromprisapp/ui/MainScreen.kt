@@ -105,7 +105,9 @@ fun MainScreen() {
                 }
                 // Right side: Content
                 Box(
-                    modifier = Modifier.weight(3f),
+                    modifier = Modifier
+                        .weight(3f)
+                        .verticalScroll(rememberScrollState()),
                     contentAlignment = Alignment.Center
                 ) {
                     getNavHost(navController, startDestination)
