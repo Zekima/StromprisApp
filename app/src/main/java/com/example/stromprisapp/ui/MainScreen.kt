@@ -22,9 +22,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.stromprisapp.ui.Global
+import com.example.stromprisapp.ui.Global.sharedPrefEur
+import com.example.stromprisapp.ui.Global.sharedPrefNOK
+import com.example.stromprisapp.ui.Global.sharedPrefSone
+import com.example.stromprisapp.ui.Global.valgtSone
+import com.example.stromprisapp.ui.Global.valutaEUR
+import com.example.stromprisapp.ui.Global.valutaNOK
 import com.example.stromprisapp.ui.HomeScreen
 import com.example.stromprisapp.ui.SettingsScreen
 import com.example.stromprisapp.ui.graph.GraphScreen
+import com.example.stromprisapp.ui.theme.StromprisAppTheme
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -34,25 +41,32 @@ fun MainScreen() {
     val currentRoute = navBackStackEntry.value?.destination?.route
 
     val currentSone = LocalContext.current
-    val sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
-    Global.valgtSone = sharedPrefSone.getString("valgtSone", Global.valgtSone).toString()
+    sharedPrefSone = currentSone.getSharedPreferences("minPrefSone", Context.MODE_PRIVATE)
+    valgtSone = sharedPrefSone.getString("valgtSone", Global.valgtSone).toString()
 
     val currentEur = LocalContext.current
-    val sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
-    Global.valutaEUR = sharedPrefEur.getBoolean("valutaEUR", false)
+    sharedPrefEur = currentEur.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    valutaEUR = sharedPrefEur.getBoolean("valutaEUR", false)
 
     val currentNOK = LocalContext.current
-    val sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
-    Global.valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
+    sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
+    valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
 
 
+    val startDestination = if(valgtSone == "velg sone") {
+        "settings"
+    } else {
+        "home"
+    }
+
+StromprisAppTheme {
         Box(
             modifier = Modifier.fillMaxSize()
 
         ) {
             NavHost(
                 navController = navController,
-                startDestination = "home",
+                startDestination = startDestination,
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .padding(start = 10.dp)
@@ -85,7 +99,7 @@ fun MainScreen() {
                     icon = { Icon(Icons.Filled.Settings, contentDescription = "Innstillinger") })
             }
         }
-
+}
 
 
 }
