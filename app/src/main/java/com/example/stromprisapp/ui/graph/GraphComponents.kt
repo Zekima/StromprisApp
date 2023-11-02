@@ -75,11 +75,24 @@ fun RegionRow(navController: NavController) {
 fun DateSelector(
     activeButton: String,
     onSelectToday: () -> Unit,
-    onSelectTomorrow: () -> Unit
+    onSelectTomorrow: () -> Unit,
+    onSelectYesterday: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
+
+
+        Button(
+            onClick = onSelectYesterday,
+            shape = RectangleShape,
+            border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color.Black),
+            colors = ButtonDefaults.buttonColors(
+                if (activeButton == "yesterday") androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.Gray
+            )
+        ) {
+            Text("I går")
+        }
         Button(
             onClick = onSelectToday,
             shape = RectangleShape,
@@ -95,10 +108,11 @@ fun DateSelector(
             shape = RectangleShape,
             border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color.Black),
             colors = ButtonDefaults.buttonColors(
-                if (activeButton == "today") androidx.compose.ui.graphics.Color.Gray else androidx.compose.ui.graphics.Color.Black
+                if (activeButton == "tomorrow") androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.Gray
             )
         ) {
             Text("I morgen")
+
         }
     }
 }
@@ -292,7 +306,7 @@ fun GraphContent(
 
                         val priceLabelValueEur = priceLabelValue / 11.8
 
-                        val priceLabel =  if (getValuta() == "NOK") {
+                        val priceLabel = if (getValuta() == "NOK") {
                             String.format("%.0f", priceLabelValue)
                         } else {
                             String.format("%.0f", priceLabelValueEur)

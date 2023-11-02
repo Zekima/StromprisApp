@@ -76,6 +76,14 @@ fun GraphScreen(navController: NavController) {
                 calendar.add(Calendar.DAY_OF_YEAR, 1)
                 selectedDate = dateFormat.format(calendar.time)
                 activeButton = "tomorrow"
+            },
+            onSelectYesterday = {
+                if (activeButton == "yesterday") return@DateSelector
+                selectedDataPoint = null
+                val calendar = Calendar.getInstance()
+                calendar.add(Calendar.DAY_OF_YEAR, -1)
+                selectedDate = dateFormat.format(calendar.time)
+                activeButton = "yesterday"
             }
         )
 
