@@ -3,8 +3,6 @@ package com.example.stromprisapp.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.stromprisapp.PriceData
 import com.example.stromprisapp.Utils
+import com.example.stromprisapp.ui.theme.RoundedEdgeCardBody
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -41,104 +40,178 @@ import java.util.Date
 @Composable
 fun HomeScreen() {
     val sharedPrefMva = LocalContext.current.getSharedPreferences("mySharedPrefMva", Context.MODE_PRIVATE)
-    val litenOverskrift = 20.sp; val pris = 50.sp; val valuta = 17.sp
-    val datesize = 16.sp; val paddingMellomOverskrifter = 30.dp
-    var mVa = sharedPrefMva.getBoolean("medMva", false)
+    val litenOverskrift = 18.sp; val pris = 50.sp; val valuta = 15.sp
+    val datesize = 15.sp; val paddingMellomOverskrifter = 25.dp
+    var mVa by remember { mutableStateOf(sharedPrefMva.getBoolean("medMva", false))}
     val year =  LocalDate.now().year
     val month = LocalDate.now().month.value
     val day = LocalDateTime.now().dayOfMonth
     val list = fetchResult(year = year.toString(), month = month.toString(), day.toString())
+    var textForDate by remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now()))) }
     var currTimeHour by remember { mutableStateOf(LocalTime.now().hour) }
     var currTTimeMinute by remember { mutableStateOf(LocalTime.now().minute)}
     var hourHolder = 0
     var minuteHolder = 0
-    var median:String  = ""
+    var median by remember { mutableStateOf("")}
+    var helper = 0
     var dagensPrisKr = if (Utils.getValuta() == "NOK") {
         formatValutaToString(list?.get(currTimeHour)?.nokPerKwh)
     } else {
         formatValutaToString(list?.get(currTimeHour)?.eurPerKwh)
     }
-
     val currentDate = LocalDate.now().toString()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val parsedDate = LocalDate.parse(currentDate, formatter)
-
     val isFirstDateOfMonth = parsedDate.dayOfMonth == 1
     val isFirstDateOfYear = parsedDate.dayOfYear == 1
     var holder = 0
-
-
-
-
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
-        LaunchedEffect(holder) {
+        LaunchedEffect(true) {
             while (true) {
-                delay(10000)
+                delay(5000)
                 hourHolder = LocalTime.now().hour
+                println("hour holder$hourHolder")
                 minuteHolder = LocalTime.now().minute
                 holder = LocalTime.now().second
+                println("Inside launched effect")
                 if (hourHolder>currTimeHour) {
+                    println(1)
                     if (minuteHolder > 2) {
+                        println(2)
                         currTimeHour = hourHolder
                          dagensPrisKr = if (Utils.getValuta() == "NOK") {
                             formatValutaToString(list?.get(currTimeHour)?.nokPerKwh)
                         } else {
                             formatValutaToString(list?.get(currTimeHour)?.eurPerKwh)
                         }
+                        textForDate = SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now()))
                     }
+
+
                 }
             }
+
+
         }
 
         TekstMedBakgrunn(
             tekst = "Strømpriser",
             modifier = Modifier.padding(top = paddingMellomOverskrifter),
-            fontSize = 50.sp
+            fontSize = 35.sp
         )
-        TekstMedBakgrunn(
-            tekst = "Strømprisen idag",
-            modifier = Modifier.padding(top = paddingMellomOverskrifter),
-            fontSize = litenOverskrift,
-            fontWeight = FontWeight.Bold
-        )
-        TekstMedBakgrunn(
-            tekst = ""+ SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now())),
-            fontSize = datesize
-        )
-        Row() {
-            TekstMedBakgrunn(
-                tekst = if (dagensPrisKr == "nu") dagensPrisKr
-                else if (!mVa) dagensPrisKr
-                else if (mVa) String.format("%.2f",(dagensPrisKr.toDouble()*1.25))
-                else "ikke funnet",
-                fontSize = pris
 
-            )
-            TekstMedBakgrunn(
-                tekst = if(Utils.getValuta() == "NOK") "øre/kWh" else "cent/kWh",
-                modifier = Modifier.padding(top = 32.dp),
-                fontSize = valuta
-            )
-        }
 
-        if (currTimeHour>=13 && currTTimeMinute>=2) {
-            TekstMedBakgrunn(tekst = "Median pris imorgen",
+
+
+        RoundedEdgeCardBody {
+
+            TekstMedBakgrunn(
+                tekst = "Strømprisen idag",
                 modifier = Modifier.padding(top = paddingMellomOverskrifter),
                 fontSize = litenOverskrift,
                 fontWeight = FontWeight.Bold
             )
+            TekstMedBakgrunn(
+                tekst = textForDate,
+                fontSize = datesize
+            )
 
+
+            Row() {
+                TekstMedBakgrunn(
+                    tekst = if (dagensPrisKr == "nu") dagensPrisKr
+                    else if (!mVa) dagensPrisKr
+                    else if (mVa) String.format("%.2f",(dagensPrisKr.toDouble()*1.25))
+                    else "ikke funnet",
+                    fontSize = pris
+
+                )
+                TekstMedBakgrunn(
+                    tekst = if(Utils.getValuta() == "NOK") "øre/kWh" else "cent/kWh",
+                    modifier = Modifier.padding(top = 32.dp),
+                    fontSize = valuta
+                )
+            }
+        }
+
+
+
+        RoundedEdgeCardBody {
+
+            if (currTimeHour>=13 && currTTimeMinute>=2) {
+                TekstMedBakgrunn(tekst = "Median pris imorgen",
+                    modifier = Modifier.padding(top = paddingMellomOverskrifter),
+                    fontSize = litenOverskrift,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Row() {
+                    if (isFirstDateOfMonth) {
+                        println(12)
+                        val list = fetchResult(
+                            year.toString(),
+                            (month + 1).toString(),
+                            getLastDayOfMonth(year.toInt(), (month-1).toInt()).toString()
+                        )
+                        median = formatValutaToString(calcMedian(list))
+                    }
+
+                    if (isFirstDateOfYear) {
+                        println(13)
+                        val list = fetchResult(
+                            (year+1).toString(),
+                            (1).toString(),
+                            getLastDayOfMonth((year + 1), 1).toString()
+                        )
+                        median = formatValutaToString(calcMedian(list))
+                    }
+
+
+                    println(14)
+                    val list = fetchResult(
+                        (year).toString(),
+                        (month).toString(),
+                        (day+1).toString()
+                    )
+                    if (list != null) {
+                        median = formatValutaToString(calcMedian(list))
+                    }
+
+                    TekstMedBakgrunn(
+                        tekst =  if (median == "nu") median
+                        else if(median.isBlank()) ""
+                        else if (!mVa) median
+                        else String.format("%.2f",(median.toDouble()*1.25)),
+                        fontSize = pris,
+                    )
+                    TekstMedBakgrunn(
+                        tekst = if(Utils.getValuta() == "NOK") "øre/kWh" else "cent/kWh",
+                        modifier = Modifier.padding(top = 32.dp),
+                        fontSize = valuta
+                    )
+                }
+
+            }
+        }
+
+        RoundedEdgeCardBody {
+            TekstMedBakgrunn(
+                tekst = "Medianpris for gårsdagen",
+                modifier = Modifier.padding(top = paddingMellomOverskrifter),
+                fontSize = litenOverskrift,
+                fontWeight = FontWeight.Bold
+            )
             Row() {
                 if (isFirstDateOfMonth) {
                     println(12)
                     val list = fetchResult(
                         year.toString(),
-                        (month + 1).toString(),
-                        getLastDayOfMonth(year.toInt(), (month-1).toInt()).toString()
+                        (month - 1).toString(),
+                        getLastDayOfMonth(year, (month-1)).toString()
                     )
                     median = formatValutaToString(calcMedian(list))
                 }
@@ -146,9 +219,9 @@ fun HomeScreen() {
                 if (isFirstDateOfYear) {
                     println(13)
                     val list = fetchResult(
-                        (year+1).toString(),
+                        (year-1).toString(),
                         (1).toString(),
-                        getLastDayOfMonth((year + 1), 1).toString()
+                        getLastDayOfMonth((year - 1), 1).toString()
                     )
                     median = formatValutaToString(calcMedian(list))
                 }
@@ -158,18 +231,18 @@ fun HomeScreen() {
                 val list = fetchResult(
                     (year).toString(),
                     (month).toString(),
-                    (day+1).toString()
+                    (day-1).toString()
                 )
                 if (list != null) {
                     median = formatValutaToString(calcMedian(list))
                 }
 
                 TekstMedBakgrunn(
-                    tekst =  if (median == "nu") median
-                    else if(median.isBlank()) ""
+                    tekst = if (median == "nu") median
+                    else if (median.isBlank()) ""
                     else if (!mVa) median
                     else String.format("%.2f",(median.toDouble()*1.25)),
-                    fontSize = pris,
+                    fontSize = pris
                 )
                 TekstMedBakgrunn(
                     tekst = if(Utils.getValuta() == "NOK") "øre/kWh" else "cent/kWh",
@@ -177,59 +250,6 @@ fun HomeScreen() {
                     fontSize = valuta
                 )
             }
-
-        }
-
-        TekstMedBakgrunn(
-            tekst = "Medianpris for gårsdagen",
-            modifier = Modifier.padding(top = paddingMellomOverskrifter),
-            fontSize = litenOverskrift,
-            fontWeight = FontWeight.Bold
-        )
-        Row() {
-            if (isFirstDateOfMonth) {
-                println(12)
-                val list = fetchResult(
-                    year.toString(),
-                    (month - 1).toString(),
-                    getLastDayOfMonth(year, (month-1)).toString()
-                )
-                median = formatValutaToString(calcMedian(list))
-            }
-
-            if (isFirstDateOfYear) {
-                println(13)
-                val list = fetchResult(
-                    (year-1).toString(),
-                    (1).toString(),
-                    getLastDayOfMonth((year - 1), 1).toString()
-                )
-                median = formatValutaToString(calcMedian(list))
-            }
-
-
-            println(14)
-            val list = fetchResult(
-                (year).toString(),
-                (month).toString(),
-                (day-1).toString()
-            )
-            if (list != null) {
-                median = formatValutaToString(calcMedian(list))
-            }
-
-            TekstMedBakgrunn(
-                tekst = if (median == "nu") median
-                else if (median.isBlank()) ""
-                else if (!mVa) median
-                else String.format("%.2f",(median.toDouble()*1.25)),
-                fontSize = pris
-            )
-            TekstMedBakgrunn(
-                tekst = if(Utils.getValuta() == "NOK") "øre/kWh" else "cent/kWh",
-                modifier = Modifier.padding(top = 32.dp),
-                fontSize = valuta
-            )
         }
 
         println(mVa.toString())
@@ -246,10 +266,9 @@ fun HomeScreen() {
         } else {
             mVa = false
         }
+        }
 
 
-
-    }
 
 }
 
@@ -320,5 +339,5 @@ fun calcMedian(list : List<PriceData>?): Double {
 
         }
     }
-    return 1.1
+    return 0.0
 }

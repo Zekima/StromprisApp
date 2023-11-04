@@ -12,13 +12,13 @@ import kotlinx.coroutines.withContext
 fun fetchResult(year: String, month: String, day: String): List<PriceData>? {
 
        val d = if (day.toInt() < 10) {
-            "0" + day
+           "0$day"
         } else {
             day
         }
 
     val m = if (month.toInt() < 10) {
-        "0" + month
+        "0$month"
     } else {
         month
     }

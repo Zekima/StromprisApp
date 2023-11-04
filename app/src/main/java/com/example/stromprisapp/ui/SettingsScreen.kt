@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -181,11 +182,13 @@ fun TekstMedBakgrunn(
     fontWeight: FontWeight = FontWeight.Normal,
     modifier: Modifier = Modifier
 
+
 ) {
    Text(text = tekst,
        color = MaterialTheme.colorScheme.onBackground,
        fontSize = fontSize,
        fontWeight = fontWeight,
+       textAlign = TextAlign.Center,
        modifier = modifier)
 
 }
