@@ -22,7 +22,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
         val rCode = 1
         val channelId = "Nye priser"
         val channelName = "TestingName"
-        manager.createNotificationChannel(NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT))
+        manager.createNotificationChannel(NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH))
 
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this,

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,7 +23,6 @@ import androidx.compose.ui.unit.sp
 import com.example.stromprisapp.PriceData
 import com.example.stromprisapp.Utils
 import com.example.stromprisapp.ui.theme.RoundedEdgeCardBody
-import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
@@ -70,33 +68,7 @@ fun HomeScreen() {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
-        LaunchedEffect(true) {
-            while (true) {
-                delay(5000)
-                hourHolder = LocalTime.now().hour
-                println("hour holder$hourHolder")
-                minuteHolder = LocalTime.now().minute
-                holder = LocalTime.now().second
-                println("Inside launched effect")
-                if (hourHolder>currTimeHour) {
-                    println(1)
-                    if (minuteHolder > 2) {
-                        println(2)
-                        currTimeHour = hourHolder
-                         dagensPrisKr = if (Utils.getValuta() == "NOK") {
-                            formatValutaToString(list?.get(currTimeHour)?.nokPerKwh)
-                        } else {
-                            formatValutaToString(list?.get(currTimeHour)?.eurPerKwh)
-                        }
-                        textForDate = SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now()))
-                    }
 
-
-                }
-            }
-
-
-        }
 
         TekstMedBakgrunn(
             tekst = "Strømpriser",
@@ -171,7 +143,6 @@ fun HomeScreen() {
                     }
 
 
-                    println(14)
                     val list = fetchResult(
                         (year).toString(),
                         (month).toString(),
@@ -207,7 +178,6 @@ fun HomeScreen() {
             )
             Row() {
                 if (isFirstDateOfMonth) {
-                    println(12)
                     val list = fetchResult(
                         year.toString(),
                         (month - 1).toString(),
@@ -217,7 +187,6 @@ fun HomeScreen() {
                 }
 
                 if (isFirstDateOfYear) {
-                    println(13)
                     val list = fetchResult(
                         (year-1).toString(),
                         (1).toString(),
@@ -227,7 +196,6 @@ fun HomeScreen() {
                 }
 
 
-                println(14)
                 val list = fetchResult(
                     (year).toString(),
                     (month).toString(),
@@ -252,7 +220,6 @@ fun HomeScreen() {
             }
         }
 
-        println(mVa.toString())
 
         if (Global.valgtSone != "NO4") {
             Row( modifier = Modifier.padding(top = 10.dp) ) {
@@ -300,7 +267,6 @@ fun getLastDayOfMonth(year: Int, month: Int): Int {
 }
 
 fun calcMedian(list : List<PriceData>?): Double {
-    println("AAAAAAAA")
     if (list != null) {
         var h1 = 0.0
         var h2 = 0.0

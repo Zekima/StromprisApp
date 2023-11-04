@@ -30,7 +30,6 @@ fun fetchResult(year: String, month: String, day: String): List<PriceData>? {
             }
 
         }
-        println(r.value.toString())
         return r.value;
 
 

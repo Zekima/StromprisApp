@@ -14,7 +14,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.w("DET FUNKET IKKE", "Fetching FCM registration token failed", task.exception)
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                println("random")
                 return@OnCompleteListener
             }
 
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
             val token = task.result
 
             // Log and toast
-            Log.d(TAG, "DET FUNKET IKKE")
+            Log.d(TAG, "DET FUNKET")
             Toast.makeText(baseContext, token.toString(), Toast.LENGTH_SHORT).show()
         })
 
