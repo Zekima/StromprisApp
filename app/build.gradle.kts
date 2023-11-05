@@ -81,5 +81,5 @@ dependencies {
 
     // notification permission
     implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
-    
+
 }

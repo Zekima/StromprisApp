@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,10 @@ import androidx.compose.ui.unit.sp
 import com.example.stromprisapp.PriceData
 import com.example.stromprisapp.Utils
 import com.example.stromprisapp.ui.theme.RoundedEdgeCardBody
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
@@ -37,6 +42,7 @@ import java.util.Date
 @Preview
 @Composable
 fun HomeScreen() {
+    println("Recompsing")
     val sharedPrefMva = LocalContext.current.getSharedPreferences("mySharedPrefMva", Context.MODE_PRIVATE)
     val litenOverskrift = 18.sp; val pris = 50.sp; val valuta = 15.sp
     val datesize = 15.sp; val paddingMellomOverskrifter = 25.dp
@@ -46,8 +52,7 @@ fun HomeScreen() {
     val day = LocalDateTime.now().dayOfMonth
     val list = fetchResult(year = year.toString(), month = month.toString(), day.toString())
     var textForDate by remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now()))) }
-    var currTimeHour by remember { mutableStateOf(LocalTime.now().hour) }
-    var currTTimeMinute by remember { mutableStateOf(LocalTime.now().minute)}
+    var currTimeHour by remember { mutableStateOf(9)}
     var hourHolder = 0
     var minuteHolder = 0
     var median by remember { mutableStateOf("")}
@@ -64,11 +69,46 @@ fun HomeScreen() {
     val isFirstDateOfYear = parsedDate.dayOfYear == 1
     var holder = 0
 
+    DisposableEffect(currTimeHour) {
+        val scope = CoroutineScope(Dispatchers.Main)
+        val job = scope.launch {
+            while (true) {
+                println("bob")
+                delay(30_00)
+                hourHolder = LocalTime.now().hour
+                minuteHolder = LocalTime.now().minute
+                holder = LocalTime.now().second
+                if (hourHolder>currTimeHour) {
+                    println(1)
+                    if (minuteHolder > 2) {
+                        println(2)
+                        currTimeHour = hourHolder
+                        dagensPrisKr = if (Utils.getValuta() == "NOK") {
+                            formatValutaToString(list?.get(currTimeHour)?.nokPerKwh)
+                        } else {
+                            formatValutaToString(list?.get(currTimeHour)?.eurPerKwh)
+                        }
+                        textForDate = SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now()))
+                    }
+
+                }
+
+            }
+
+        }
+
+        onDispose {
+            job.cancel()
+        }
+
+
+
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
-
 
         TekstMedBakgrunn(
             tekst = "Strømpriser",
@@ -111,11 +151,10 @@ fun HomeScreen() {
         }
 
 
-
-        RoundedEdgeCardBody {
-
-            if (currTimeHour>=13 && currTTimeMinute>=2) {
-                TekstMedBakgrunn(tekst = "Median pris imorgen",
+        if (currTimeHour>=13 && minuteHolder>=2) {
+            RoundedEdgeCardBody {
+                TekstMedBakgrunn(
+                    tekst = "Median pris imorgen",
                     modifier = Modifier.padding(top = paddingMellomOverskrifter),
                     fontSize = litenOverskrift,
                     fontWeight = FontWeight.Bold
@@ -127,15 +166,15 @@ fun HomeScreen() {
                         val list = fetchResult(
                             year.toString(),
                             (month + 1).toString(),
-                            getLastDayOfMonth(year.toInt(), (month-1).toInt()).toString()
+                            getLastDayOfMonth(year.toInt(), (month - 1).toInt()).toString()
                         )
                         median = formatValutaToString(calcMedian(list))
                     }
 
                     if (isFirstDateOfYear) {
-                        println(13)
+
                         val list = fetchResult(
-                            (year+1).toString(),
+                            (year + 1).toString(),
                             (1).toString(),
                             getLastDayOfMonth((year + 1), 1).toString()
                         )
@@ -146,25 +185,26 @@ fun HomeScreen() {
                     val list = fetchResult(
                         (year).toString(),
                         (month).toString(),
-                        (day+1).toString()
+                        (day + 1).toString()
                     )
                     if (list != null) {
                         median = formatValutaToString(calcMedian(list))
                     }
 
                     TekstMedBakgrunn(
-                        tekst =  if (median == "nu") median
-                        else if(median.isBlank()) ""
+                        tekst = if (median == "nu") median
+                        else if (median.isBlank()) ""
                         else if (!mVa) median
-                        else String.format("%.2f",(median.toDouble()*1.25)),
+                        else String.format("%.2f", (median.toDouble() * 1.25)),
                         fontSize = pris,
                     )
                     TekstMedBakgrunn(
-                        tekst = if(Utils.getValuta() == "NOK") "øre/kWh" else "cent/kWh",
+                        tekst = if (Utils.getValuta() == "NOK") "øre/kWh" else "cent/kWh",
                         modifier = Modifier.padding(top = 32.dp),
                         fontSize = valuta
                     )
                 }
+
 
             }
         }
@@ -220,7 +260,6 @@ fun HomeScreen() {
             }
         }
 
-
         if (Global.valgtSone != "NO4") {
             Row( modifier = Modifier.padding(top = 10.dp) ) {
                 mVa = medMvaSwitch(sharedPreferences = sharedPrefMva)
@@ -250,7 +289,6 @@ fun medMvaSwitch(sharedPreferences: SharedPreferences) : Boolean {
             medMva.value = newValue
         }
     )
-    println(sharedPreferences.getBoolean("medMva",false).toString())
     return sharedPreferences.getBoolean("medMva", false)
 }
 
