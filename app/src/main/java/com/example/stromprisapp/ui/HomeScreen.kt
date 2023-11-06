@@ -74,7 +74,7 @@ fun HomeScreen() {
         val job = scope.launch {
             while (true) {
                 println("bob")
-                delay(30_00)
+                delay(30_000)
                 hourHolder = LocalTime.now().hour
                 minuteHolder = LocalTime.now().minute
                 holder = LocalTime.now().second
@@ -151,7 +151,7 @@ fun HomeScreen() {
         }
 
 
-        if (currTimeHour>=13 && minuteHolder>=2) {
+        if (currTimeHour>13) {
             RoundedEdgeCardBody {
                 TekstMedBakgrunn(
                     tekst = "Median pris imorgen",

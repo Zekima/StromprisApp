@@ -15,26 +15,41 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
+        println("12")
         super.onMessageReceived(message)
+        val action = message.data["action"]
+         if (action == "open_application") {
 
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val id = 1
-        val rCode = 1
-        val channelId = "Nye priser"
-        val channelName = "TestingName"
-        manager.createNotificationChannel(NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH))
+             println(13)
 
-        val intent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this,
-            rCode, intent, PendingIntent.FLAG_IMMUTABLE)
+             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+             val id = 1
+             val channelId = "Nye Priser"
+             val channelName = message.messageType
+             manager.createNotificationChannel(NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH))
 
-        val message = NotificationCompat.Builder(this, channelId)
-            .setContentTitle(message.notification?.title)
-            .setContentText(message.notification?.body)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .build()
-        manager.notify(id, message)
+             val bText = "dddd"
+
+             val bIntent = Intent(this, MainActivity::class.java)
+             val bPendingIntent: PendingIntent =
+                 PendingIntent.getBroadcast(this, 0, bIntent, PendingIntent.FLAG_IMMUTABLE)
+
+             val intent = Intent(this, MainActivity::class.java)
+             val pendingIntent = PendingIntent.getActivity(this,
+                 1, intent, PendingIntent.FLAG_IMMUTABLE)
+
+             val not = NotificationCompat.Builder(this, channelId)
+                 .setSmallIcon(R.drawable.ic_launcher_background)
+                 .setContentTitle(message.notification?.title)
+                 .setContentText(message.notification?.body)
+                 .setContentIntent(pendingIntent)
+                 .setAutoCancel(true)
+                 .addAction(com.google.firebase.messaging.ktx.R.drawable.common_google_signin_btn_icon_dark_focused,bText, bPendingIntent)
+                 .build()
+             manager.notify(id, not)
+         }
+
+
     }
 
 }
