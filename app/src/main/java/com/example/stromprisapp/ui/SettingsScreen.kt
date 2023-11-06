@@ -5,14 +5,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -71,103 +75,135 @@ fun SettingsScreen( ) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TekstMedBakgrunn(tekst = "Settings", fontSize = 50.sp, modifier = Modifier.padding(top =16.dp, bottom = 90.dp) )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            TekstMedBakgrunn(tekst = "Settings", fontSize = 50.sp, modifier = Modifier.padding(top =16.dp))
+            Divider(color = Color.Black)
+
+        }
+        Spacer(modifier = Modifier.padding(16.dp))
 
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            // verticalAlignment = Alignment.CenterVertically
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            TekstMedBakgrunn(tekst = "Her kan du velge de \n ulike sonene", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-            Box(
+            Column(
                 modifier = Modifier
-                    .background(Color(color = MaterialTheme.colorScheme.primary.toArgb()), CircleShape)
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .background(
+                        Color(color = MaterialTheme.colorScheme.secondary.toArgb()),
+                        shape = RoundedCornerShape(16.dp)
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+
 
             ) {
 
-                Button(onClick = { menyValgSone = true }) {
-                    TekstMedBakgrunn(tekst = convertZoneCode(valgtSone), fontSize = 25.sp)
-                }
-                DropdownMenu(expanded = menyValgSone, onDismissRequest = { menyValgSone = false }) {
-                    listeSone.forEachIndexed { index, item ->
-                        DropdownMenuItem({
-                            TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
-                        }, onClick = {
-                            val element = listeSone[index]
-                            valgtSone = when (element) {
-                                "Oslo Øst-Norge" -> "NO1"
-                                "Kristiandsand Sør-Norge" -> "NO2"
-                                "Trondheim Midt-Norge" -> "NO3"
-                                "Tromsø Nord-Norge" -> "NO4"
-                                "Bergen Vest-Norge" -> "NO5"
-                                else -> "Finner ikke valgt sone"
-                            }
-                            val editor = sharedPrefSone.edit()
-                            editor.putString("valgtSone", valgtSone)
-                            editor.apply()
-                            menyValgSone = false
-                            valgtSone = element
+                TekstMedBakgrunn(tekst = "Her kan du velge de \n ulike sonene", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(40.dp))
+                Box(
+                    modifier = Modifier
+                        .background(Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()), CircleShape)
 
-                        },
-                            trailingIcon = {
-                                Icon(
-                                    iconSone,
-                                    "",
-                                    Modifier.clickable { menyValgSone = !menyValgSone })
-                            })
+                ) {
+
+                    Button(onClick = { menyValgSone = true }) {
+                        TekstMedBakgrunn(tekst = convertZoneCode(valgtSone), fontSize = 25.sp)
+                    }
+                    DropdownMenu(expanded = menyValgSone, onDismissRequest = { menyValgSone = false }) {
+                        listeSone.forEachIndexed { index, item ->
+                            DropdownMenuItem({
+                                TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                            }, onClick = {
+                                val element = listeSone[index]
+                                valgtSone = when (element) {
+                                    "Oslo Øst-Norge" -> "NO1"
+                                    "Kristiandsand Sør-Norge" -> "NO2"
+                                    "Trondheim Midt-Norge" -> "NO3"
+                                    "Tromsø Nord-Norge" -> "NO4"
+                                    "Bergen Vest-Norge" -> "NO5"
+                                    else -> "Finner ikke valgt sone"
+                                }
+                                val editor = sharedPrefSone.edit()
+                                editor.putString("valgtSone", valgtSone)
+                                editor.apply()
+                                menyValgSone = false
+                                valgtSone = element
+
+                            },
+                                trailingIcon = {
+                                    Icon(
+                                        iconSone,
+                                        "",
+                                        Modifier.clickable { menyValgSone = !menyValgSone })
+                                })
+                        }
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(150.dp))
-            TekstMedBakgrunn(tekst = "Her kan du velge valuta", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-            Box(
+            Column(
                 modifier = Modifier
-                    // .width(100.dp)
-                    // .height(100.dp)
-                    .background(Color(color = MaterialTheme.colorScheme.primary.toArgb()), CircleShape)
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .background(
+                        Color(color = MaterialTheme.colorScheme.secondary.toArgb()),
+                        shape = RoundedCornerShape(16.dp)
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+
             ) {
-                Button(onClick = { menyvalgValuta = true }) {
-                    TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 35.sp)
-                }
-                DropdownMenu(
-                    expanded = menyvalgValuta,
-                    onDismissRequest = { menyvalgValuta = false }) {
-                    listeValuta.forEachIndexed { index, item ->
-                        DropdownMenuItem({
-                            TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
-                        }, onClick = {
-                            when (listeValuta[index]) {
-                                "NOK" -> {
-                                    valutaNOK = true
-                                    valutaEUR = false
-                                }
-                                "€" -> {
-                                    valutaEUR = true
-                                    valutaNOK = false
-                                }
 
-                                else -> "ugyldig Valuta"
-                            }
-                            val endre = sharedPrefNOK.edit()
-                            endre.putBoolean("valutaNOK", valutaNOK)
-                            endre.apply()
-                            val endre1 = sharedPrefEur.edit()
-                            endre1.putBoolean("valutaEUR", valutaEUR)
-                            endre1.apply()
-                            menyvalgValuta = false
-
-                            velgValuta = listeValuta[index]
-                        },
-                            trailingIcon = {
-                                Icon(
-                                    iconValuta,
-                                    "",
-                                    Modifier.clickable { menyvalgValuta = !menyvalgValuta })
-                            })
+                TekstMedBakgrunn(tekst = "Her kan du velge valuta", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(50.dp))
+                Box(
+                    modifier = Modifier
+                        //
+                        // .height(100.dp)
+                        .background(Color(color = MaterialTheme.colorScheme.primary.toArgb()), CircleShape)
+                ) {
+                    Button(onClick = { menyvalgValuta = true }) {
+                        TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 35.sp)
                     }
+                    DropdownMenu(
+                        expanded = menyvalgValuta,
+                        onDismissRequest = { menyvalgValuta = false }) {
+                        listeValuta.forEachIndexed { index, item ->
+                            DropdownMenuItem({
+                                TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                            }, onClick = {
+                                when (listeValuta[index]) {
+                                    "NOK" -> {
+                                        valutaNOK = true
+                                        valutaEUR = false
+                                    }
+                                    "€" -> {
+                                        valutaEUR = true
+                                        valutaNOK = false
+                                    }
 
+                                    else -> "ugyldig Valuta"
+                                }
+                                val endre = sharedPrefNOK.edit()
+                                endre.putBoolean("valutaNOK", valutaNOK)
+                                endre.apply()
+                                val endre1 = sharedPrefEur.edit()
+                                endre1.putBoolean("valutaEUR", valutaEUR)
+                                endre1.apply()
+                                menyvalgValuta = false
+
+                                velgValuta = listeValuta[index]
+                            },
+                                trailingIcon = {
+                                    Icon(
+                                        iconValuta,
+                                        "",
+                                        Modifier.clickable { menyvalgValuta = !menyvalgValuta })
+                                })
+                        }
+
+                    }
                 }
             }
         }
@@ -182,11 +218,11 @@ fun TekstMedBakgrunn(
     modifier: Modifier = Modifier
 
 ) {
-   Text(text = tekst,
-       color = MaterialTheme.colorScheme.onBackground,
-       fontSize = fontSize,
-       fontWeight = fontWeight,
-       modifier = modifier)
+    Text(text = tekst,
+        color = MaterialTheme.colorScheme.onBackground,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        modifier = modifier)
 
 }
 
@@ -207,10 +243,10 @@ fun kontrastFarge(backgroundColor: Color, modifier: Modifier = Modifier): Color 
 
     val farge = (0.299 * backgroundColor.red + 0.587 * backgroundColor.green + 0.114 * backgroundColor.blue).toFloat()
 
-   return if(farge > 0.5){
+    return if(farge > 0.5){
         Black
     } else {
         White
     }
 }
-    
+
