@@ -343,6 +343,9 @@ fun GraphContent(
                     pointRecs.value.clear()
 
                     val circleRadius = 4.dp.toPx()
+
+                    val sectionWidth = boxSize.value.width / sortedData!!.size
+
                     sortedData?.forEachIndexed { i, priceData ->
                         val x = i * xScale
                         val y =
@@ -363,11 +366,14 @@ fun GraphContent(
 
                         pointRecs.value.add(pointRect)
 
+                        val hitboxLeft = i * sectionWidth
+                        val hitboxRight = hitboxLeft + sectionWidth
+
                         val hitboxRect = Rect(
                             top = 0f,
-                            left = x - (circleRadius + 9),
+                            left = hitboxLeft,
                             bottom = boxSize.value.height,
-                            right = x + (circleRadius + 9)
+                            right = hitboxRight
                         )
 
                         hitboxRecs.value.add(hitboxRect)
