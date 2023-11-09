@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "675436088662",
+    "project_id": "stromprismessages",
+    "storage_bucket": "stromprismessages.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675436088662:android:35cc35c5cb9bfb4ef41af7",
+        "android_client_info": {
+          "package_name": "com.example.stromprisapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBzpBRZja_rz-IwPrUdtklglpqmOXZRD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

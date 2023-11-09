@@ -34,7 +34,6 @@ import com.example.stromprisapp.ui.Global.valgtSone
 import com.example.stromprisapp.ui.Global.valutaEUR
 import com.example.stromprisapp.ui.Global.valutaNOK
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen() {
 
