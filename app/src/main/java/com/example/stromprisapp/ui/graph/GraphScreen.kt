@@ -58,7 +58,7 @@ fun GraphScreen(navController: NavController) {
 
     var sortedData by remember { mutableStateOf<List<PriceData>?>(null) }
 
-    Column(modifier = Modifier.padding(top = 100.dp, start = 16.dp, end = 16.dp)) {
+    Column(modifier = Modifier.padding(top = 0.dp, start = 0.dp, end = 0.dp)) {
 
         RoundedEdgeCardBody {
             RegionRow(navController = navController)

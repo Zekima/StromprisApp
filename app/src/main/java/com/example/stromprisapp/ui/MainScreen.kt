@@ -75,7 +75,6 @@ fun MainScreen() {
             ) {
                 // Left side: NavigationBar
                 Box(
-                    modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.BottomStart
                 ) {
                     NavigationBar(
