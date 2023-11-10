@@ -19,9 +19,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
         super.onMessageReceived(message)
         val action = message.data["action"]
          if (action == "open_application") {
-
              println(13)
-
              val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
              val id = 1
              val channelId = "Nye Priser"

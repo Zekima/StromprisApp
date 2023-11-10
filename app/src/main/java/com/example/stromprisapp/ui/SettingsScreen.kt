@@ -195,11 +195,11 @@ fun TekstMedBakgrunn(
 
 fun convertZoneCode(s : String) : String {
     var b = when(s) {
-        "NO1"  -> "Oslo " + "Øst-Norge"
-        "NO2" -> "Kristiandsand \n \n Sør-Norge"
-        "NO3" -> "Trondheim \n \n Midt-Norge"
-        "NO4" -> "Tromsø \n \n Nord-Norge"
-        "NO5" -> "Bergen \n \n Vest-Norge"
+        "NO1"  -> "Øst-Norge"
+        "NO2" -> "Sør-Norge"
+        "NO3" -> "Midt-Norge"
+        "NO4" -> "Nord-Norge"
+        "NO5" -> "Vest-Norge"
         else -> "velg sone"
     }
     return b;

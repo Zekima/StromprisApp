@@ -23,6 +23,8 @@ fun fetchResult(year: String, month: String, day: String): List<PriceData>? {
         month
     }
 
+    println(valgtSone)
+
         val r = produceState<List<PriceData>?>(initialValue = null) {
             println(valgtSone + " her er zone")
             value = withContext(Dispatchers.IO) {
@@ -30,8 +32,9 @@ fun fetchResult(year: String, month: String, day: String): List<PriceData>? {
             }
 
         }
-    println(r.value)
-        return r.value;
+    print(1)
+    return r.value;
+
 
 
 }

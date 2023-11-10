@@ -11,6 +11,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,7 +53,7 @@ fun HomeScreen() {
     val day = LocalDateTime.now().dayOfMonth
     val list = fetchResult(year = year.toString(), month = month.toString(), day.toString())
     var textForDate by remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now()))) }
-    var currTimeHour by remember { mutableStateOf(9)}
+    var currTimeHour by remember { mutableIntStateOf(LocalTime.now().hour) }
     var hourHolder = 0
     var minuteHolder = 0
     var median by remember { mutableStateOf("")}
@@ -74,7 +75,7 @@ fun HomeScreen() {
         val job = scope.launch {
             while (true) {
                 println("bob")
-                delay(30_000)
+                delay(10_000)
                 hourHolder = LocalTime.now().hour
                 minuteHolder = LocalTime.now().minute
                 holder = LocalTime.now().second
@@ -90,11 +91,8 @@ fun HomeScreen() {
                         }
                         textForDate = SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now()))
                     }
-
                 }
-
             }
-
         }
 
         onDispose {
@@ -117,10 +115,8 @@ fun HomeScreen() {
         )
 
 
-
-
         RoundedEdgeCardBody {
-
+            println(12)
             TekstMedBakgrunn(
                 tekst = "Strømprisen idag",
                 modifier = Modifier.padding(top = paddingMellomOverskrifter),
@@ -153,6 +149,7 @@ fun HomeScreen() {
 
         if (currTimeHour>13) {
             RoundedEdgeCardBody {
+                println(13)
                 TekstMedBakgrunn(
                     tekst = "Median pris imorgen",
                     modifier = Modifier.padding(top = paddingMellomOverskrifter),
@@ -163,7 +160,7 @@ fun HomeScreen() {
                 Row() {
                     if (isFirstDateOfMonth) {
                         println(12)
-                        val list = fetchResult(
+                        val l = fetchResult(
                             year.toString(),
                             (month + 1).toString(),
                             getLastDayOfMonth(year.toInt(), (month - 1).toInt()).toString()
@@ -173,7 +170,7 @@ fun HomeScreen() {
 
                     if (isFirstDateOfYear) {
 
-                        val list = fetchResult(
+                        val l = fetchResult(
                             (year + 1).toString(),
                             (1).toString(),
                             getLastDayOfMonth((year + 1), 1).toString()
@@ -182,12 +179,12 @@ fun HomeScreen() {
                     }
 
 
-                    val list = fetchResult(
+                    val l = fetchResult(
                         (year).toString(),
                         (month).toString(),
                         (day + 1).toString()
                     )
-                    if (list != null) {
+                    if (l != null) {
                         median = formatValutaToString(calcMedian(list))
                     }
 
@@ -210,6 +207,7 @@ fun HomeScreen() {
         }
 
         RoundedEdgeCardBody {
+            println(14)
             TekstMedBakgrunn(
                 tekst = "Medianpris for gårsdagen",
                 modifier = Modifier.padding(top = paddingMellomOverskrifter),
@@ -218,7 +216,7 @@ fun HomeScreen() {
             )
             Row() {
                 if (isFirstDateOfMonth) {
-                    val list = fetchResult(
+                    val l = fetchResult(
                         year.toString(),
                         (month - 1).toString(),
                         getLastDayOfMonth(year, (month-1)).toString()
@@ -227,7 +225,7 @@ fun HomeScreen() {
                 }
 
                 if (isFirstDateOfYear) {
-                    val list = fetchResult(
+                    val l = fetchResult(
                         (year-1).toString(),
                         (1).toString(),
                         getLastDayOfMonth((year - 1), 1).toString()
@@ -236,12 +234,12 @@ fun HomeScreen() {
                 }
 
 
-                val list = fetchResult(
+                val l = fetchResult(
                     (year).toString(),
                     (month).toString(),
                     (day-1).toString()
                 )
-                if (list != null) {
+                if (l != null) {
                     median = formatValutaToString(calcMedian(list))
                 }
 
@@ -273,9 +271,6 @@ fun HomeScreen() {
             mVa = false
         }
         }
-
-
-
 }
 
 @Composable
@@ -308,7 +303,7 @@ fun calcMedian(list : List<PriceData>?): Double {
     if (list != null) {
         var h1 = 0.0
         var h2 = 0.0
-        val listSize = (list?.size?.div(2))?.minus(1)
+        val listSize = list.size.div(2).minus(1)
         if (Utils.getValuta() == "NOK") {
             if (list.size % 2 == 1) {
                 list.forEachIndexed { index, priceData ->
@@ -322,8 +317,7 @@ fun calcMedian(list : List<PriceData>?): Double {
                 }
 
             } else {
-                var value: Double = list.get(list.size - 1).nokPerKwh
-                return value
+                return list[list.size - 1].nokPerKwh
             }
         } else {
                 if (list.size % 2 == 1) {
@@ -337,8 +331,7 @@ fun calcMedian(list : List<PriceData>?): Double {
                     }
                     return (h1+h2)/2
                 } else {
-                    var value: Double = list.get(list.size - 1).eurPerKwh
-                    return value
+                    return list[list.size - 1].eurPerKwh
                 }
 
         }
