@@ -1,17 +1,16 @@
 package com.example.stromprisapp.ui.graph
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -41,6 +40,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -58,15 +58,15 @@ import java.util.Locale
 
 @Composable
 fun RegionRow(navController: NavController) {
-    Row(modifier = Modifier.padding(bottom = 5.dp)) {
-        Text(text = "Region: Oslo / NO1")
+    Row (modifier = Modifier.padding(top = 10.dp)) {
+        Text(text = "Region: Sør-Norge")
         Spacer(modifier = Modifier.width(5.dp))
         Box(
             Modifier.clickable { navController.navigate("settings") }
         ) {
             Text(
                 text = "Endre",
-                color = androidx.compose.ui.graphics.Color.Magenta
+                color = Color.Magenta
             )
         }
     }
@@ -80,8 +80,6 @@ fun DateSelector(
     onSelectYesterday: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
     ) {
 
 
@@ -149,13 +147,13 @@ fun PriceTooltip(
             Box(
                 modifier = Modifier
                     .graphicsLayer(
-                        translationX = rect.left - 69,
-                        translationY = rect.top - 140
+                        translationX = rect.left - 75,
+                        translationY = rect.top - 195
                     )
                     .clip(RoundedCornerShape(8.dp))
                     .background(androidx.compose.ui.graphics.Color.Black)
                     .width(65.dp)
-                    .height(45.dp),
+                    .height(65.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -167,15 +165,20 @@ fun PriceTooltip(
                     Text(
                         textAlign = TextAlign.Center,
                         color = androidx.compose.ui.graphics.Color.White,
-                        text = displayPrice + if (getValuta() == "NOK") " øre" else " cent"
+                        text = displayPrice
+                    )
+                    Text(
+                        textAlign = TextAlign.Center,
+                        color = androidx.compose.ui.graphics.Color.White,
+                        text = if (getValuta() == "NOK") "øre" else "cent"
                     )
                 }
             }
             Box(
                 modifier = Modifier
                     .graphicsLayer(
-                        translationX = rect.left - 69,
-                        translationY = rect.top - 140
+                        translationX = rect.left - 75,
+                        translationY = rect.top - 195
                     )
                     .width(30.dp)
                     .height(15.dp)
@@ -212,7 +215,7 @@ fun GraphContent(
     onSelectedDataPointIndexChanged: (Int) -> Unit,
     isLoading: Boolean,
     activeButton: String,
-    checked: Boolean
+    checked: Boolean,
 ) {
     val hitboxRecs = remember { mutableStateOf(ArrayList<Rect>()) }
     val pointRecs = remember { mutableStateOf(ArrayList<Rect>()) }
@@ -227,6 +230,10 @@ fun GraphContent(
 
     var showTooltip by remember { mutableStateOf(false) }
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+
     var xScale = 0f
     var yScale = 0f
     var minPrice = 0f
@@ -236,7 +243,7 @@ fun GraphContent(
 
     Box(
         modifier = Modifier
-            .aspectRatio(3 / 2f)
+            .aspectRatio(if (isLandscape) 9 / 3f else 3/2f)
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures(

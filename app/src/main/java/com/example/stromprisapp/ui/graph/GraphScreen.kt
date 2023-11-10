@@ -1,8 +1,11 @@
 package com.example.stromprisapp.ui.graph
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,11 +22,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.stromprisapp.PriceData
 import com.example.stromprisapp.Utils.convertTime
-import com.example.stromprisapp.ui.theme.RoundedEdgeCardBody
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -32,13 +35,9 @@ import java.util.Locale
 const val bottomOffset = 50f;
 
 /*
-
 todo:
-   EUR/NOK tilpasning (trenger ikke å skifte selve path/datapoins siden det er relativ)
    Automatisk tooltip for idag og klokkeslett
    Darkmode/light mode tilpasning
-
-
 */
 
 @Composable
@@ -58,11 +57,14 @@ fun GraphScreen(navController: NavController) {
 
     var sortedData by remember { mutableStateOf<List<PriceData>?>(null) }
 
-    Column(modifier = Modifier.padding(top = 0.dp, start = 0.dp, end = 0.dp)) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-        RoundedEdgeCardBody {
-            RegionRow(navController = navController)
+    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)
 
+    ) {
+        if (!isLandscape) RegionRow(navController = navController)
+        Row () {
             DateSelector(
                 activeButton = activeButton,
                 onSelectToday = {
@@ -88,6 +90,8 @@ fun GraphScreen(navController: NavController) {
                     activeButton = "yesterday"
                 }
             )
+            Spacer(modifier = Modifier.width(5.dp))
+            if (isLandscape) RegionRow(navController = navController)
         }
         var checked by remember { mutableStateOf(true) }
         FetchPriceData(selectedDate) { result ->
@@ -103,38 +107,38 @@ fun GraphScreen(navController: NavController) {
             return
         }
 
-        RoundedEdgeCardBody {
-            GraphContent(
-                sortedData = sortedData,
-                selectedDataPoint = selectedDataPoint,
-                onSelectedDataPointChanged = { newDataPoint ->
-                    selectedDataPoint = newDataPoint
-                },
-                selectedDataPointIndex = selectedDataPointIndex,
-                onSelectedDataPointIndexChanged = { newIndex ->
-                    selectedDataPointIndex = newIndex
-                },
-                isLoading = isLoading,
-                activeButton = activeButton,
-                checked = checked
-            )
 
-            Row(
-                modifier = Modifier.padding(top = 15.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Switch(
-                    checked = checked,
-                    onCheckedChange = {
-                        checked = it
-                    }
-                )
-                Text(
-                    text = "Inkluder nettleie, avgifter og mva",
-                    modifier = Modifier.padding(start = 5.dp)
-                )
-            }
+        GraphContent(
+            sortedData = sortedData,
+            selectedDataPoint = selectedDataPoint,
+            onSelectedDataPointChanged = { newDataPoint ->
+                selectedDataPoint = newDataPoint
+            },
+            selectedDataPointIndex = selectedDataPointIndex,
+            onSelectedDataPointIndexChanged = { newIndex ->
+                selectedDataPointIndex = newIndex
+            },
+            isLoading = isLoading,
+            activeButton = activeButton,
+            checked = checked
+        )
+
+        Row(
+            modifier = Modifier.padding(top = 15.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Switch(
+                checked = checked,
+                onCheckedChange = {
+                    checked = it
+                }
+            )
+            Text(
+                text = "Inkluder nettleie, avgifter og mva",
+                modifier = Modifier.padding(start = 5.dp)
+            )
         }
+
 
     }
 }
