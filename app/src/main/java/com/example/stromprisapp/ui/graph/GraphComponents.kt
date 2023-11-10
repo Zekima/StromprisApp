@@ -1,7 +1,6 @@
 package com.example.stromprisapp.ui.graph
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -17,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
@@ -58,15 +59,15 @@ import java.util.Locale
 
 @Composable
 fun RegionRow(navController: NavController) {
-    Row (modifier = Modifier.padding(top = 10.dp)) {
-        Text(text = "Region: Sør-Norge")
+    Row(modifier = Modifier.padding(top = 10.dp)) {
+        Text(text = "Region: Sør-Norge", color = MaterialTheme.colorScheme.onBackground)
         Spacer(modifier = Modifier.width(5.dp))
         Box(
             Modifier.clickable { navController.navigate("settings") }
         ) {
             Text(
                 text = "Endre",
-                color = Color.Magenta
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -75,45 +76,30 @@ fun RegionRow(navController: NavController) {
 @Composable
 fun DateSelector(
     activeButton: String,
+    onSelectYesterday: () -> Unit,
     onSelectToday: () -> Unit,
-    onSelectTomorrow: () -> Unit,
-    onSelectYesterday: () -> Unit
+    onSelectTomorrow: () -> Unit
 ) {
-    Row(
+    Row {
+        DateButton("I går", activeButton == "yesterday", onSelectYesterday)
+        DateButton("I dag", activeButton == "today", onSelectToday)
+        DateButton("I morgen", activeButton == "tomorrow", onSelectTomorrow)
+    }
+}
+
+
+@Composable
+fun DateButton(text: String, isActive: Boolean, onClick: () -> Unit) {
+    Button(
+        onClick = {
+            if (!isActive) onClick()
+        },
+        shape = RectangleShape,
+        colors = ButtonDefaults.buttonColors(
+            if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+        )
     ) {
-
-
-        Button(
-            onClick = onSelectYesterday,
-            shape = RectangleShape,
-            border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color.Black),
-            colors = ButtonDefaults.buttonColors(
-                if (activeButton == "yesterday") androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.Gray
-            )
-        ) {
-            Text("I går")
-        }
-        Button(
-            onClick = onSelectToday,
-            shape = RectangleShape,
-            border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color.Black),
-            colors = ButtonDefaults.buttonColors(
-                if (activeButton == "today") androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.Gray
-            )
-        ) {
-            Text("I dag")
-        }
-        Button(
-            onClick = onSelectTomorrow,
-            shape = RectangleShape,
-            border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color.Black),
-            colors = ButtonDefaults.buttonColors(
-                if (activeButton == "tomorrow") androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.Gray
-            )
-        ) {
-            Text("I morgen")
-
-        }
+        Text(text)
     }
 }
 
@@ -241,9 +227,17 @@ fun GraphContent(
 
     showTooltip = false;
 
+    val paint = android.graphics
+        .Paint()
+        .apply {
+            color = MaterialTheme.colorScheme.onBackground.toArgb()
+            textSize = 29f
+            textAlign = android.graphics.Paint.Align.RIGHT
+        }
+
     Box(
         modifier = Modifier
-            .aspectRatio(if (isLandscape) 9 / 3f else 3/2f)
+            .aspectRatio(if (isLandscape) 9 / 3f else 3 / 2f)
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -257,6 +251,7 @@ fun GraphContent(
                     }
                 )
             }
+
             .drawWithCache {
 
                 boxSize.value = size
@@ -292,13 +287,6 @@ fun GraphContent(
                         drawPath(path!!, Color.Gray, style = Stroke(4.dp.toPx()))
                     }
 
-                    val paint = android.graphics
-                        .Paint()
-                        .apply {
-                            color = android.graphics.Color.BLACK
-                            textSize = 29f
-                            textAlign = android.graphics.Paint.Align.RIGHT
-                        }
 
                     for (i in 0 until yAxisLabelCount) {
 
@@ -373,6 +361,7 @@ fun GraphContent(
 
                         pointRecs.value.add(pointRect)
 
+                        // could be reworked
                         val hitboxLeft = i * sectionWidth
                         val hitboxRight = hitboxLeft + sectionWidth
 

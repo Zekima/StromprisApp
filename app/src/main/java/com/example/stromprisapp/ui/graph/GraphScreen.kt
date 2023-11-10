@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,27 +68,30 @@ fun GraphScreen(navController: NavController) {
         Row () {
             DateSelector(
                 activeButton = activeButton,
+                onSelectYesterday = {
+                    if (activeButton != "yesterday") {
+                        selectedDataPoint = null
+                        val calendar = Calendar.getInstance()
+                        calendar.add(Calendar.DAY_OF_YEAR, -1)
+                        selectedDate = dateFormat.format(calendar.time)
+                        activeButton = "yesterday"
+                    }
+                },
                 onSelectToday = {
-                    if (activeButton == "today") return@DateSelector
-                    selectedDataPoint = null
-                    selectedDate = currentDate
-                    activeButton = "today"
+                    if (activeButton != "today") {
+                        selectedDataPoint = null
+                        selectedDate = dateFormat.format(Calendar.getInstance().time)
+                        activeButton = "today"
+                    }
                 },
                 onSelectTomorrow = {
-                    if (activeButton == "tomorrow") return@DateSelector
-                    selectedDataPoint = null
-                    val calendar = Calendar.getInstance()
-                    calendar.add(Calendar.DAY_OF_YEAR, 1)
-                    selectedDate = dateFormat.format(calendar.time)
-                    activeButton = "tomorrow"
-                },
-                onSelectYesterday = {
-                    if (activeButton == "yesterday") return@DateSelector
-                    selectedDataPoint = null
-                    val calendar = Calendar.getInstance()
-                    calendar.add(Calendar.DAY_OF_YEAR, -1)
-                    selectedDate = dateFormat.format(calendar.time)
-                    activeButton = "yesterday"
+                    if (activeButton != "tomorrow") {
+                        selectedDataPoint = null
+                        val calendar = Calendar.getInstance()
+                        calendar.add(Calendar.DAY_OF_YEAR, 1)
+                        selectedDate = dateFormat.format(calendar.time)
+                        activeButton = "tomorrow"
+                    }
                 }
             )
             Spacer(modifier = Modifier.width(5.dp))
@@ -135,6 +139,7 @@ fun GraphScreen(navController: NavController) {
             )
             Text(
                 text = "Inkluder nettleie, avgifter og mva",
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(start = 5.dp)
             )
         }
