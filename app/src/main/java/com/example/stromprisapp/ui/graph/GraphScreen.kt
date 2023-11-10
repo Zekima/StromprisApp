@@ -108,7 +108,7 @@ fun GraphScreen(navController: NavController) {
         }
 
         if (sortedData == null) {
-            Text(text = "Strømpriser for i morgen publiseres kl 13:00 i dag", modifier = Modifier.fillMaxWidth())
+            Text(text = "Strømpriser for i morgen publiseres kl 13:00 i dag", modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.onBackground)
             return
         }
 
