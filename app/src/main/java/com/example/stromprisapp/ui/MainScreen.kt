@@ -123,8 +123,10 @@ fun MainScreen() {
                 modifier = Modifier.fillMaxSize()
 
             ) {
-                getNavHost(navController, startDestination)
-
+                Box(modifier = Modifier.fillMaxSize() 
+                        .verticalScroll(rememberScrollState()))  {
+                    getNavHost(navController, startDestination)
+              }
                 NavigationBar(
 
                     modifier = Modifier.align(Alignment.BottomCenter)
