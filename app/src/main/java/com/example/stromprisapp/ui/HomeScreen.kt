@@ -70,14 +70,17 @@ fun HomeScreen() {
     {
 
 
-        TekstMedBakgrunn(
-            tekst = "Strømpriser",
-            modifier = Modifier.padding(top = paddingMellomOverskrifter),
-            fontSize = 35.sp
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            TekstMedBakgrunn(
+                tekst = "Strømpriser",
+                modifier = Modifier.padding(top = paddingMellomOverskrifter),
+                fontSize = 50.sp
+            )
+            Divider(
+                color = Color.Black
+            )
 
-
-
+        }
 
         RoundedEdgeCardBody {
 
