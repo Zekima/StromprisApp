@@ -236,6 +236,7 @@ fun HomeScreen() {
         } else {
             mVa = false
         }
+         Spacer(modifier = Modifier.padding(50.dp))
         }
 
 
