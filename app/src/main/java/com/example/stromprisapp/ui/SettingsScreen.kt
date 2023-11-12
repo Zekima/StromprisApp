@@ -238,6 +238,7 @@ fun SettingsScreen( ) {
 
                 TekstMedBakgrunn(tekst = "Notifikasjon", fontSize = 16.sp)
             }
+               Spacer(modifier = Modifier.padding(50.dp))
         }
     }
 }
