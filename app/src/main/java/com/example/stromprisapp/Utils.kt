@@ -83,4 +83,16 @@ object Utils {
         return if (Global.valutaNOK) "NOK" else "EUR"
     }
 
+    fun convertZoneCode(s : String) : String {
+        var b = when(s) {
+            "NO1"  -> "Øst-Norge"
+            "NO2" -> "Sør-Norge"
+            "NO3" -> "Midt-Norge"
+            "NO4" -> "Nord-Norge"
+            "NO5" -> " Vest-Norge"
+            else -> "velg sone"
+        }
+        return b;
+    }
+
 }

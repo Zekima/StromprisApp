@@ -127,7 +127,7 @@ fun SettingsScreen( ) {
                 ) {
 
                     Button(onClick = { menyValgSone = true }) {
-                        TekstMedBakgrunn(tekst = convertZoneCode(valgtSone), fontSize = 25.sp)
+                        TekstMedBakgrunn(tekst = Utils.convertZoneCode(valgtSone), fontSize = 25.sp)
                     }
                     DropdownMenu(expanded = menyValgSone, onDismissRequest = { menyValgSone = false }) {
                         listeSone.forEachIndexed { index, item ->
@@ -259,18 +259,6 @@ fun TekstMedBakgrunn(
        textAlign = TextAlign.Center,
        modifier = modifier)
 
-}
-
-fun convertZoneCode(s : String) : String {
-    var b = when(s) {
-        "NO1"  -> "Øst-Norge"
-        "NO2" -> "Sør-Norge"
-        "NO3" -> "Midt-Norge"
-        "NO4" -> "Nord-Norge"
-        "NO5" -> " Vest-Norge"
-        else -> "velg sone"
-    }
-    return b;
 }
 
 
