@@ -261,7 +261,6 @@ fun TekstMedBakgrunn(
 
 }
 
-
 fun kontrastFarge(backgroundColor: Color, modifier: Modifier = Modifier): Color {
 
     val farge = (0.299 * backgroundColor.red + 0.587 * backgroundColor.green + 0.114 * backgroundColor.blue).toFloat()
