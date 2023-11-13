@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.stromprisapp.PriceData
 import com.example.stromprisapp.Utils
+import com.example.stromprisapp.Utils.convertZoneCode
 import com.example.stromprisapp.Utils.fetchApiData
 import com.example.stromprisapp.Utils.getValuta
 import com.example.stromprisapp.Utils.includeFees
@@ -60,7 +61,8 @@ import java.util.Locale
 @Composable
 fun RegionRow(navController: NavController) {
     Row(modifier = Modifier.padding(top = 10.dp)) {
-        Text(text = "Region: Sør-Norge", color = MaterialTheme.colorScheme.onBackground)
+        val currentRegion = convertZoneCode(valgtSone)
+        Text(text = "Region: $currentRegion", color = MaterialTheme.colorScheme.onBackground)
         Spacer(modifier = Modifier.width(5.dp))
         Box(
             Modifier.clickable { navController.navigate("settings") }
