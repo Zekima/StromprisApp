@@ -177,7 +177,7 @@ fun SettingsScreen( ) {
                 Spacer(modifier = Modifier.height(50.dp))
                 Box(
                     modifier = Modifier
-
+ 
                         // .height(100.dp)
                         .background(Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()), CircleShape)
                 ) {
