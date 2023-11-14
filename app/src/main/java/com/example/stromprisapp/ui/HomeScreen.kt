@@ -6,8 +6,10 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -17,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -108,10 +111,15 @@ fun HomeScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            TekstMedBakgrunn(
-                tekst = "Strømpriser",
-                fontSize = 45.sp
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                TekstMedBakgrunn(
+                    tekst = "Strømpriser",
+                    fontSize = 45.sp
+                )
+                Divider(color = Color.Black)
+            }
+            Spacer(modifier = Modifier.padding(16.dp))
+
             Row(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -285,12 +293,16 @@ fun HomeScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            TekstMedBakgrunn(
-                tekst = "Strømpriser",
-                modifier = Modifier.padding(top = paddingMellomOverskrifter),
-                fontSize = 35.sp
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                TekstMedBakgrunn(
+                    tekst = "Strømpriser",
+                    modifier = Modifier.padding(top = paddingMellomOverskrifter),
+                    fontSize = 35.sp
+                )
+                Divider(color = Color.Black)
+            }
 
+     Spacer(modifier = Modifier.padding(16.dp))
             RoundedEdgeCardBody {
                 TekstMedBakgrunn(
                     tekst = "Strømprisen idag",
@@ -322,7 +334,7 @@ fun HomeScreen() {
                 }
             }
 
-
+            Spacer(modifier = Modifier.padding(16.dp))
             if (currTimeHour > 13) {
                 RoundedEdgeCardBody {
                     TekstMedBakgrunn(
@@ -377,7 +389,7 @@ fun HomeScreen() {
                     }
                 }
             }
-
+            Spacer(modifier = Modifier.padding(16.dp))
             RoundedEdgeCardBody {
                 TekstMedBakgrunn(
                     tekst = "Medianpris for gårsdagen",
@@ -441,6 +453,7 @@ fun HomeScreen() {
             } else {
                 mVa = false
             }
+            Spacer(modifier = Modifier.padding(50.dp))
         }
     }
 }
