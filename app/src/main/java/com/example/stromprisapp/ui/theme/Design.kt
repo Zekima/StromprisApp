@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,22 +26,21 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun RoundedEdgeCardBody(content: @Composable () -> Unit) {
-    val background = if (isSystemInDarkTheme()) {
-        CardDefaults.cardColors(Purple40)
-    } else {
-        CardDefaults.cardColors(Pink80)
-    }
-    Card(
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(50.dp)),
-        colors = background
+            .clip(RoundedCornerShape(50.dp))
+            .background(Color(color = MaterialTheme.colorScheme.primary.toArgb())),
+
+
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .padding(16.dp),
+                .padding(16.dp)
+                ,
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -50,18 +50,14 @@ fun RoundedEdgeCardBody(content: @Composable () -> Unit) {
 }
 @Composable
 fun RoundedEdgeCardBodyHorizontal(content: @Composable () -> Unit) {
-    val background = if (isSystemInDarkTheme()) {
-        CardDefaults.cardColors(Purple40)
-    } else {
-        CardDefaults.cardColors(Pink80)
-    }
-    Card(
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)
             .padding(5.dp)
-            .clip(RoundedCornerShape(50.dp)),
-        colors = background
+            .clip(RoundedCornerShape(50.dp))
+            .background(Color(color = MaterialTheme.colorScheme.primary.toArgb())),
 
     ) {
         Column(
