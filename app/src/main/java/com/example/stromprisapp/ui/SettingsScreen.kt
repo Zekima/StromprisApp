@@ -26,6 +26,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -88,8 +89,6 @@ fun SettingsScreen( ) {
         Icons.Filled.KeyboardArrowUp
     }
 
-
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -110,7 +109,7 @@ fun SettingsScreen( ) {
                     .fillMaxWidth()
                     .height(200.dp)
                     .background(
-                        Color(color = MaterialTheme.colorScheme.secondary.toArgb()),
+                        Color(color = MaterialTheme.colorScheme.primary.toArgb()),
                         shape = RoundedCornerShape(16.dp)
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -122,11 +121,11 @@ fun SettingsScreen( ) {
                 Spacer(modifier = Modifier.height(40.dp))
                 Box(
                     modifier = Modifier
-                        .background(Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()), CircleShape)
+                        .background(Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()) , CircleShape)
 
                 ) {
 
-                    Button(onClick = { menyValgSone = true }) {
+                    TextButton(onClick = { menyValgSone = true }) {
                         TekstMedBakgrunn(tekst = Utils.convertZoneCode(valgtSone), fontSize = 25.sp)
                     }
                     DropdownMenu(expanded = menyValgSone, onDismissRequest = { menyValgSone = false }) {
@@ -161,13 +160,13 @@ fun SettingsScreen( ) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(150.dp))
+            Spacer(modifier = Modifier.height(120.dp))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
                     .background(
-                        Color(color = MaterialTheme.colorScheme.secondary.toArgb()),
+                        Color(color = MaterialTheme.colorScheme.primary.toArgb()),
                         shape = RoundedCornerShape(16.dp)
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -180,9 +179,9 @@ fun SettingsScreen( ) {
                     modifier = Modifier
 
                         // .height(100.dp)
-                        .background(Color(color = MaterialTheme.colorScheme.primary.toArgb()), CircleShape)
+                        .background(Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()), CircleShape)
                 ) {
-                    Button(onClick = { menyvalgValuta = true }) {
+                    TextButton(onClick = { menyvalgValuta = true }) {
                         TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 35.sp)
                     }
                     DropdownMenu(
@@ -271,4 +270,4 @@ fun kontrastFarge(backgroundColor: Color, modifier: Modifier = Modifier): Color 
         White
     }
 }
-    
+
