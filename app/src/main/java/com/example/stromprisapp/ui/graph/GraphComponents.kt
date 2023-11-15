@@ -58,6 +58,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Composable funskjon som skal vise regionen og en knapp for å endre dette
+ *
+ * @param navController For å navigere gjennom de ulike composables.
+ */
 @Composable
 fun RegionRow(navController: NavController) {
     Row(modifier = Modifier.padding(top = 10.dp)) {
@@ -75,6 +80,14 @@ fun RegionRow(navController: NavController) {
     }
 }
 
+/**
+ * Composable funkjson som skal vise hvilken dager knappene.
+ *
+ * @param activeButton String for den valgte aktive knappen.
+ * @param onSelectYesterday Callback når "Yesterday" knappen er selektert.
+ * @param onSelectToday Callback når "Today" knappen er selektert.
+ * @param onSelectTomorrow Callback når "Tomorrow" knappen er selektert.
+ */
 @Composable
 fun DateSelector(
     activeButton: String,
@@ -88,8 +101,13 @@ fun DateSelector(
         DateButton("I morgen", activeButton == "tomorrow", onSelectTomorrow)
     }
 }
-
-
+/**
+ * Composable funkjson som representerer en knapp for date.
+ *
+ * @param text Teksten som skal vises på knappen.
+ * @param isActive Om knappen er "Aktiv" eller ikke.
+ * @param onClick Callback når knappen er trykket.
+ */
 @Composable
 fun DateButton(text: String, isActive: Boolean, onClick: () -> Unit) {
     Button(
@@ -105,7 +123,13 @@ fun DateButton(text: String, isActive: Boolean, onClick: () -> Unit) {
     }
 }
 
-
+/**
+ * Composable funkjson som viser en tooltip for prisen for ett bestemt klokkelsett når man klikker på grafen.
+ *
+ * @param selectedDataPoint PriceData som representerer det bestemte punket på grafen.
+ * @param rect Rektangelet som vises når man klikker på grafen.
+ * @param includeFees Om ekstra kostander skal vises.
+ */
 @Composable
 fun PriceTooltip(
     selectedDataPoint: PriceData?,
@@ -139,7 +163,7 @@ fun PriceTooltip(
                         translationY = rect.top - 195
                     )
                     .clip(RoundedCornerShape(8.dp))
-                    .background(androidx.compose.ui.graphics.Color.Black)
+                    .background(Color.Black)
                     .width(65.dp)
                     .height(65.dp),
                 contentAlignment = Alignment.Center
@@ -147,17 +171,17 @@ fun PriceTooltip(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = "Kl: " + Utils.convertTime(selectedDataPoint.timeStart, "HH"),
-                        color = androidx.compose.ui.graphics.Color.White,
+                        color = Color.White,
                         textAlign = TextAlign.Center
                     )
                     Text(
                         textAlign = TextAlign.Center,
-                        color = androidx.compose.ui.graphics.Color.White,
+                        color = Color.White,
                         text = displayPrice
                     )
                     Text(
                         textAlign = TextAlign.Center,
-                        color = androidx.compose.ui.graphics.Color.White,
+                        color = Color.White,
                         text = if (getValuta() == "NOK") "øre" else "cent"
                     )
                 }
@@ -171,12 +195,17 @@ fun PriceTooltip(
                     .width(30.dp)
                     .height(15.dp)
                     .rotate(180f)
-                    .background(androidx.compose.ui.graphics.Color.Black, shape = TriangleShape)
+                    .background(Color.Black, shape = TriangleShape)
             )
         }
     }
 }
-
+/**
+ * Composable funksjon som fetcher prisen for en dato og sone fra API.
+ *
+ * @param selectedDate Dato med formatet: "yyyy-MM-dd" format.
+ * @param onResult Callback når man fetched data eller null hvis noe gikk dårlig.
+ */
 @Composable
 fun FetchPriceData(selectedDate: String, onResult: (List<PriceData>?) -> Unit) {
     val fetchResult = remember { mutableStateOf<List<PriceData>?>(null) }
@@ -193,7 +222,18 @@ fun FetchPriceData(selectedDate: String, onResult: (List<PriceData>?) -> Unit) {
         }
     }
 }
-
+/**
+ * Composable funksjon som viser prisgrafen, grid, path, labels og data points.
+ *
+ * @param sortedData PriceData objektene som representerer alle punktene for grafen.
+ * @param selectedDataPoint Selektert PriceData punkt.
+ * @param onSelectedDataPointChanged Callback punkene endres.
+ * @param selectedDataPointIndex Index på selektert punkt.
+ * @param onSelectedDataPointIndexChanged Callback når index på selektert punkt endres.
+ * @param isLoading Om data blir lastet.
+ * @param activeButton Valgt knapp (i dag, i går, i morgen).
+ * @param checked Om MvA skal inkluderes.
+ */
 @Composable
 fun GraphContent(
     sortedData: List<PriceData>?,
@@ -260,7 +300,6 @@ fun GraphContent(
                 var yAxisLabelCount = 0;
                 var yAxisInterval = 0f;
 
-
                 // eur/nok revamp
 
                 if (sortedData != null) {
@@ -289,7 +328,6 @@ fun GraphContent(
                         drawPath(path!!, Color.Gray, style = Stroke(4.dp.toPx()))
                     }
 
-
                     for (i in 0 until yAxisLabelCount) {
 
                         // eur/nok revamp
@@ -302,17 +340,14 @@ fun GraphContent(
                             (minPrice + i * yAxisInterval) * 100
                         }
 
-
                         val priceLabelValueEur = priceLabelValue / 11.8
-
                         val priceLabel = if (getValuta() == "NOK") {
                             String.format("%.0f", priceLabelValue)
                         } else {
                             String.format("%.0f", priceLabelValueEur)
                         }
 
-                        val y =
-                            boxSize.value.height - ((minPrice + i * yAxisInterval) - minPrice) * yScale - 50f
+                        val y = boxSize.value.height - ((minPrice + i * yAxisInterval) - minPrice) * yScale - 50f
 
                         drawContext.canvas.nativeCanvas.drawText(
                             priceLabel,
@@ -378,7 +413,8 @@ fun GraphContent(
                     }
                 }
             }
-    ) {
+        )
+        {
 
         LaunchedEffect(sortedData) {
             showTooltip = true

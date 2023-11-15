@@ -36,12 +36,12 @@ import java.util.Locale
 
 const val bottomOffset = 50f;
 
-/*
-todo:
-   Automatisk tooltip for idag og klokkeslett
-   Darkmode/light mode tilpasning
-*/
 
+/**
+ * Composable funskjon som skal vise GraphScreen. her er det en graf, region, hvilken dag og MvA switch
+ *
+ * @param navController For å navigere gjennom de ulike composables.
+ */
 @Composable
 fun GraphScreen(navController: NavController) {
 
@@ -62,11 +62,10 @@ fun GraphScreen(navController: NavController) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-
-    ) {
+    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
+    {
         if (!isLandscape) RegionRow(navController = navController)
-        Row () {
+        Row {
             DateSelector(
                 activeButton = activeButton,
                 onSelectYesterday = {
@@ -106,12 +105,10 @@ fun GraphScreen(navController: NavController) {
                 sortedData = null
             }
         }
-
         if (sortedData == null) {
             Text(text = "Strømpriser for i morgen publiseres kl 13:00 i dag", modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.onBackground)
             return
         }
-
 
         GraphContent(
             sortedData = sortedData,
@@ -131,7 +128,8 @@ fun GraphScreen(navController: NavController) {
         Row(
             modifier = Modifier.padding(top = 15.dp),
             verticalAlignment = Alignment.CenterVertically
-        ) {
+        )
+        {
             Switch(
                 checked = checked,
                 onCheckedChange = {
@@ -144,14 +142,19 @@ fun GraphScreen(navController: NavController) {
                 modifier = Modifier.padding(start = 5.dp)
             )
         }
-
-
     }
 }
 
-
+/**
+ * For å generere streker(graf) mellom flere punkter
+ *
+ * @param data Listen med PriceData objekter som skal representere alle punktene i grafen.
+ * @param xScale Skalering for x-axis.
+ * @param yScale Skalering for y-axis.
+ * @param size Størrelsen på grafen.
+ * @return En Path som representerer grafen.
+ */
 fun generatePath(data: List<PriceData>, xScale: Float, yScale: Float, size: Size): Path {
-
     val path = Path()
     val minPrice = data.minOf { it.nokPerKwh }
 
@@ -165,10 +168,15 @@ fun generatePath(data: List<PriceData>, xScale: Float, yScale: Float, size: Size
             path.lineTo(x, y)
         }
     }
-
     return path
 }
 
+/**
+ * Tegner en grid med  horizontale og vertikale linjer
+ *
+ * @param size Størrelsen på canvas.
+ * @param lines Antall horizontale og vertikale linjer på griden. Default er 4.
+ */
 fun DrawScope.drawGrid(size: Size, lines: Int = 4) {
 
     val barWidthPx = 1.dp.toPx()
@@ -196,4 +204,3 @@ fun DrawScope.drawGrid(size: Size, lines: Int = 4) {
         )
     }
 }
-

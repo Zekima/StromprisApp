@@ -29,18 +29,14 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
 
+/**
+ * Composable funksjon for temaet.
+ * @param darkTheme Om man skal bruke DarkTheme som endret i Android innstillinger
+ * @param dynamicColor Om man skal bruke dynamicColor som er true by default
+ * @param content Content som theme'et skal endre
+ */
 @Composable
 fun StromprisAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -53,7 +49,6 @@ fun StromprisAppTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -67,7 +62,6 @@ fun StromprisAppTheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
-
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

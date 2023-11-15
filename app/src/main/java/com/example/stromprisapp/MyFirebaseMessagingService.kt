@@ -10,19 +10,25 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
+/**
+ * Service handler for håndtering av firebase cloud message (FMC) events
+ * Ansvarlig for å håndtere nye FMC tokens og messages som kommer inn
+ */
 class MyFirebaseMessagingService : FirebaseMessagingService(){
     override fun onNewToken(token: String) {
         super.onNewToken(token)
     }
 
+    /**
+     * Blir kalt på når en ny FMC token blir opprettet
+     * @param message FMC Token
+     */
     @SuppressLint("LaunchActivityFromNotification")
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        println("Notification received")
         super.onMessageReceived(message)
         val a = message.data["action"]
         if (a == "open_application") {
-            println(13)
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val id = 1
             val channelId = "Nye Priser"
@@ -40,7 +46,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
                 intent,
                 PendingIntent.FLAG_IMMUTABLE
             )
-
             // Build the notification
             val builder = NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.power_icon)
@@ -53,7 +58,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
 
             // notificationId is a unique int for each notification that you must define
             manager.notify(id, builder.build())
-
         }
     }
 }

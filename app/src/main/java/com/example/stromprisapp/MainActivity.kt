@@ -10,15 +10,21 @@ import com.example.stromprisapp.ui.MainScreen
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 
+/**
+ * Hovedklassen skal starte applikasjonen og fetche FMC token fra firebase
+ */
 class MainActivity : ComponentActivity() {
+    /**
+     * blir kalt på ved oppsatart og henter FMC token og setter content til mainscreen
+     * @param savedInstanceState Husker dette til neste gang man starter appen fordi det blir bundlet
+     * og lagret
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                println("random")
                 return@OnCompleteListener
             }
-
             // Get new FCM registration token
             val token = task.result
 
@@ -26,12 +32,9 @@ class MainActivity : ComponentActivity() {
             Log.d(TAG, "DET FUNKET")
             Toast.makeText(baseContext, token.toString(), Toast.LENGTH_SHORT).show()
         })
-
         super.onCreate(savedInstanceState)
         setContent{
             MainScreen()
         }
     }
-
-
 }

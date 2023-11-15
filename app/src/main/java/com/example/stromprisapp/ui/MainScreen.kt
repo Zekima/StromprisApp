@@ -40,6 +40,12 @@ import com.example.stromprisapp.ui.Global.valutaNOK
 import com.example.stromprisapp.ui.graph.GraphScreen
 import com.example.stromprisapp.ui.theme.StromprisAppTheme
 
+/**
+ * Compasable funksjon som representerer mainscreen
+ * Man ser på om telefonen er på skrå og endrer designet ut ifra dette. Hvis den er vertical så kommer
+ * navigation baren på bunn og content over. Hvis horizontal kommer navbar på vestre. Sjekker også
+ * SharedPreferences slik at riktig informasjon brukes. Eks: området for strømpris
+ */
 @Composable
 fun MainScreen() {
 
@@ -62,21 +68,15 @@ fun MainScreen() {
     sharedPrefNOK = currentNOK.getSharedPreferences("minPrefValuta", Context.MODE_PRIVATE)
     valutaNOK = sharedPrefNOK.getBoolean("valutaNOK", false)
 
-    val startDestination = if(valgtSone == "velg sone") {
-        "settings"
-    } else {
-        "home"
-    }
+    val startDestination = if(valgtSone == "velg sone") "settings" else "home"
 
     StromprisAppTheme {
         if (isLandscape) { //For horisontal view
-            Row(
-                modifier = Modifier.fillMaxSize()
-            ) {
+            Row(modifier = Modifier.fillMaxSize())
+            {
                 // Left side: NavigationBar
-                Box(
-                    contentAlignment = Alignment.BottomStart
-                ) {
+                Box(contentAlignment = Alignment.BottomStart)
+                {
                     NavigationBar(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -119,18 +119,16 @@ fun MainScreen() {
             }
         } else {
             // Default view i "loddrett" modus
-            Box(
-                modifier = Modifier.fillMaxSize()
-
-            ) {
-                Box(modifier = Modifier.fillMaxSize() 
-                        .verticalScroll(rememberScrollState()))  {
+            Box(modifier = Modifier.fillMaxSize())
+            {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()))
+                {
                     getNavHost(navController, startDestination)
-              }
-                NavigationBar(
-
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                ) {
+                }
+                NavigationBar(modifier = Modifier.align(Alignment.BottomCenter))
+                {
                     NavigationBarItem(
                         selected = currentRoute == "home",
                         label = { Text("Hjem") },
@@ -151,6 +149,12 @@ fun MainScreen() {
         }
     }
 }
+
+/**
+ * Composable funsksjon som lager navbaren. Lagde den som en funksjon siden den er i bruk 2 ganger
+ * @param navController ansvarlig for håndtering av navigasjons endringer
+ * @param startDestination Hvilken "skjerm" man skal starte på
+ */
 @Composable
 fun getNavHost(navController: NavHostController, startDestination : String) {
     NavHost(

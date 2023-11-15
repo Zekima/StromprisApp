@@ -51,56 +51,43 @@ import com.example.stromprisapp.ui.Global.valutaEUR
 import com.example.stromprisapp.ui.Global.valutaNOK
 import com.example.stromprisapp.ui.Global.velgValuta
 import com.example.stromprisapp.ui.theme.Black
+import com.example.stromprisapp.ui.theme.TekstMedBakgrunn
 import com.example.stromprisapp.ui.theme.White
 
+/**
+ * Composable funksjon som lager settingscreen grafisk. Den skal sørge for at brukeren skal kunne
+ * lagre data og opplysinger som sted, valutta og notifikasjoner. Dette blir da lagret som en
+ * SharedPreferences.
+ */
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun SettingsScreen( ) {
-
     var isCkecked by mutableStateOf(false)
-
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     val currentChecked = LocalContext.current;
     val sharedPrefChecked = currentChecked.getSharedPreferences("minPrefChecked", Context.MODE_PRIVATE)
     isCkecked = sharedPrefChecked.getBoolean("ischecked",false)
 
-    var menyvalgValuta by remember {
-        mutableStateOf(false)
-    }
-    var menyValgSone by remember {
-        mutableStateOf(false)
-    }
+    var menyvalgValuta by remember { mutableStateOf(false) }
+    var menyValgSone by remember { mutableStateOf(false) }
     val listeValuta = listOf("NOK", "€")
-
-    val listeSone = listOf("Oslo Øst-Norge", "Kristiandsand Sør-Norge", "Trondheim Midt-Norge",
-        "Tromsø Nord-Norge", "Bergen Vest-Norge")
-
-    val iconSone = if( menyValgSone) {
-        Icons.Filled.KeyboardArrowDown
-    } else {
-        Icons.Filled.KeyboardArrowUp
-    }
-    val iconValuta = if( menyvalgValuta) {
-        Icons.Filled.KeyboardArrowDown
-    } else {
-        Icons.Filled.KeyboardArrowUp
-    }
-
-
+    val listeSone = listOf(
+        "Oslo Øst-Norge", "Kristiandsand Sør-Norge", "Trondheim Midt-Norge",
+        "Tromsø Nord-Norge", "Bergen Vest-Norge"
+    )
+    val iconSone = if( menyValgSone) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowUp
+    val iconValuta = if( menyvalgValuta) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowUp
 
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    )
+    {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             TekstMedBakgrunn(tekst = "Settings", fontSize = 50.sp, modifier = Modifier.padding(top =16.dp))
             Divider(color = Color.Black)
-
         }
         Spacer(modifier = Modifier.padding(16.dp))
-
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -114,18 +101,12 @@ fun SettingsScreen( ) {
                         shape = RoundedCornerShape(16.dp)
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally
-
-
-            ) {
-
+            )
+            {
                 TekstMedBakgrunn(tekst = "Her kan du velge de \n ulike sonene", fontSize = 25.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(40.dp))
-                Box(
-                    modifier = Modifier
-                        .background(Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()), CircleShape)
-
-                ) {
-
+                Box(modifier = Modifier.background(Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()), CircleShape))
+                {
                     Button(onClick = { menyValgSone = true }) {
                         TekstMedBakgrunn(tekst = Utils.convertZoneCode(valgtSone), fontSize = 25.sp)
                     }
@@ -149,18 +130,17 @@ fun SettingsScreen( ) {
                                 menyValgSone = false
                                 valgtSone = element
 
-                            },
-                                trailingIcon = {
-                                    Icon(
-                                        iconSone,
-                                        "",
-                                        Modifier.clickable { menyValgSone = !menyValgSone })
-                                })
+                            }, trailingIcon = {
+                                Icon(
+                                    iconSone,
+                                    "",
+                                    Modifier.clickable { menyValgSone = !menyValgSone }
+                                )
+                            })
                         }
                     }
                 }
             }
-
             Spacer(modifier = Modifier.height(150.dp))
             Column(
                 modifier = Modifier
@@ -171,17 +151,16 @@ fun SettingsScreen( ) {
                         shape = RoundedCornerShape(16.dp)
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally
-
-            ) {
-
+            )
+            {
                 TekstMedBakgrunn(tekst = "Her kan du velge valuta", fontSize = 25.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(50.dp))
                 Box(
                     modifier = Modifier
-
                         // .height(100.dp)
                         .background(Color(color = MaterialTheme.colorScheme.primary.toArgb()), CircleShape)
-                ) {
+                )
+                {
                     Button(onClick = { menyvalgValuta = true }) {
                         TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 35.sp)
                     }
@@ -201,7 +180,6 @@ fun SettingsScreen( ) {
                                         valutaEUR = true
                                         valutaNOK = false
                                     }
-
                                     else -> "ugyldig Valuta"
                                 }
                                 val endre = sharedPrefNOK.edit()
@@ -211,17 +189,16 @@ fun SettingsScreen( ) {
                                 endre1.putBoolean("valutaEUR", valutaEUR)
                                 endre1.apply()
                                 menyvalgValuta = false
-
                                 velgValuta = listeValuta[index]
-                            },
+                                },
                                 trailingIcon = {
                                     Icon(
                                         iconValuta,
                                         "",
-                                        Modifier.clickable { menyvalgValuta = !menyvalgValuta })
+                                        Modifier.clickable { menyvalgValuta = !menyvalgValuta }
+                                    )
                                 })
                         }
-
                     }
                 }
             }
@@ -229,7 +206,8 @@ fun SettingsScreen( ) {
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
-            ) {
+            )
+            {
                 Checkbox(checked = isCkecked, onCheckedChange = {
                     isCkecked = it
                     val endre = sharedPrefChecked.edit()
@@ -238,37 +216,7 @@ fun SettingsScreen( ) {
 
                 TekstMedBakgrunn(tekst = "Notifikasjon", fontSize = 16.sp)
             }
-               Spacer(modifier = Modifier.padding(50.dp))
+           Spacer(modifier = Modifier.padding(50.dp))
         }
     }
 }
-
-@Composable
-fun TekstMedBakgrunn(
-    tekst: String,
-    fontSize: TextUnit = 16.sp,
-    fontWeight: FontWeight = FontWeight.Normal,
-    modifier: Modifier = Modifier
-
-
-) {
-   Text(text = tekst,
-       color = MaterialTheme.colorScheme.onBackground,
-       fontSize = fontSize,
-       fontWeight = fontWeight,
-       textAlign = TextAlign.Center,
-       modifier = modifier)
-
-}
-
-fun kontrastFarge(backgroundColor: Color, modifier: Modifier = Modifier): Color {
-
-    val farge = (0.299 * backgroundColor.red + 0.587 * backgroundColor.green + 0.114 * backgroundColor.blue).toFloat()
-
-   return if(farge > 0.5){
-        Black
-    } else {
-        White
-    }
-}
-    
