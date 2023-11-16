@@ -14,6 +14,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,14 +35,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 
 @SuppressLint("SimpleDateFormat", "CoroutineCreationDuringComposition")
@@ -60,8 +58,7 @@ fun HomeScreen() {
     val month = LocalDate.now().month.value
     val day = LocalDateTime.now().dayOfMonth
     val list = fetchResult(year = year.toString(), month = month.toString(), day.toString())
-    var textForDate by remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now()))) }
-    var currTimeHour by remember { mutableStateOf(9)}
+    var currTimeHour by remember { mutableIntStateOf(LocalTime.now().hour)}
     var hourHolder = 0
     var minuteHolder = 0
     var median by remember { mutableStateOf("")}
@@ -96,7 +93,6 @@ fun HomeScreen() {
                         } else {
                             formatValutaToString(list?.get(currTimeHour)?.eurPerKwh)
                         }
-                        textForDate = SimpleDateFormat("dd/MM/yyyy - hh:mm z").format(Date.from(Instant.now()))
                     }
                 }
             }
@@ -131,14 +127,10 @@ fun HomeScreen() {
                 ) {
                     RoundedEdgeCardBodyHorizontal {
                         TekstMedBakgrunn(
-                            tekst = "Strømprisen idag",
+                            tekst = "Strømprisen nå",
                             modifier = Modifier.padding(top = paddingMellomOverskrifter),
                             fontSize = litenOverskrift,
                             fontWeight = FontWeight.Bold
-                        )
-                        TekstMedBakgrunn(
-                            tekst = textForDate,
-                            fontSize = datesize
                         )
                         Row()
                         {
@@ -305,17 +297,11 @@ fun HomeScreen() {
      Spacer(modifier = Modifier.padding(16.dp))
             RoundedEdgeCardBody {
                 TekstMedBakgrunn(
-                    tekst = "Strømprisen idag",
+                    tekst = "Strømprisen nå",
                     modifier = Modifier.padding(top = paddingMellomOverskrifter),
                     fontSize = litenOverskrift,
                     fontWeight = FontWeight.Bold
                 )
-                TekstMedBakgrunn(
-                    tekst = textForDate,
-                    fontSize = datesize
-                )
-
-
                 Row()
                 {
                     TekstMedBakgrunn(
@@ -518,3 +504,10 @@ fun calcMedian(list : List<PriceData>?): Double {
     }
     return 0.0
 }
+
+@Preview
+@Composable
+fun HomePrev() {
+    HomeScreen()
+}
+
