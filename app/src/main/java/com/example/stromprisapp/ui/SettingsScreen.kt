@@ -1,8 +1,12 @@
 package com.example.stromprisapp.ui
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +29,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -43,6 +48,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.stromprisapp.Utils
 import com.example.stromprisapp.ui.Global.sharedPrefEur
 import com.example.stromprisapp.ui.Global.sharedPrefNOK
@@ -52,20 +59,18 @@ import com.example.stromprisapp.ui.Global.valutaEUR
 import com.example.stromprisapp.ui.Global.valutaNOK
 import com.example.stromprisapp.ui.Global.velgValuta
 import com.example.stromprisapp.ui.theme.Black
+import com.example.stromprisapp.ui.theme.RoundedEdgeCardBody
+import com.example.stromprisapp.ui.theme.RoundedEdgeCardBodyHorizontal
 import com.example.stromprisapp.ui.theme.White
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun SettingsScreen( ) {
 
-    var isCkecked by mutableStateOf(false)
-
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    val currentChecked = LocalContext.current;
-    val sharedPrefChecked = currentChecked.getSharedPreferences("minPrefChecked", Context.MODE_PRIVATE)
-    isCkecked = sharedPrefChecked.getBoolean("ischecked",false)
+    val context = LocalContext.current
 
     var menyvalgValuta by remember {
         mutableStateOf(false)
@@ -89,104 +94,242 @@ fun SettingsScreen( ) {
         Icons.Filled.KeyboardArrowUp
     }
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            TekstMedBakgrunn(tekst = "Settings", fontSize = 50.sp, modifier = Modifier.padding(top =16.dp))
-            Divider(color = Color.Black)
-
-        }
-        Spacer(modifier = Modifier.padding(16.dp))
-
+    if (isLandscape) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(
-                        Color(color = MaterialTheme.colorScheme.primary.toArgb()),
-                        shape = RoundedCornerShape(16.dp)
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally
-
-
+        )
+        {
+            TekstMedBakgrunn(
+                tekst = "Settings",
+                fontSize = 50.sp
+            )
+            Divider(color = Color.Black)
+            Spacer(modifier = Modifier.padding(5.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    RoundedEdgeCardBodyHorizontal()
+                    {
+                        TekstMedBakgrunn(
+                            tekst = "Her kan du velge de \n ulike sonene",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(25.dp))
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()),
+                                    CircleShape
+                                )
 
-                TekstMedBakgrunn(tekst = "Her kan du velge de \n ulike sonene", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(40.dp))
+                        ) {
+                            TextButton(onClick = { menyValgSone = true }) {
+                                TekstMedBakgrunn(
+                                    tekst = Utils.convertZoneCode(valgtSone),
+                                    fontSize = 25.sp
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = menyValgSone,
+                                onDismissRequest = { menyValgSone = false }) {
+                                listeSone.forEachIndexed { index, item ->
+                                    DropdownMenuItem(
+                                        {
+                                            TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                                        }, onClick = {
+                                            val element = listeSone[index]
+                                            valgtSone = when (element) {
+                                                "Oslo Øst-Norge" -> "NO1"
+                                                "Kristiandsand Sør-Norge" -> "NO2"
+                                                "Trondheim Midt-Norge" -> "NO3"
+                                                "Tromsø Nord-Norge" -> "NO4"
+                                                "Bergen Vest-Norge" -> "NO5"
+                                                else -> "Finner ikke valgt sone"
+                                            }
+                                            val editor = sharedPrefSone.edit()
+                                            editor.putString("valgtSone", valgtSone)
+                                            editor.apply()
+                                            menyValgSone = false
+                                            valgtSone = element
+
+                                        }, trailingIcon = {
+                                            Icon(
+                                                iconSone,
+                                                "",
+                                                Modifier.clickable { menyValgSone = !menyValgSone }
+                                            )
+                                        })
+                                }
+                            }
+                        }
+                    }
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    RoundedEdgeCardBodyHorizontal()
+                    {
+                        TekstMedBakgrunn(
+                            tekst = "Her kan du velge valuta\n",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()),
+                                    CircleShape
+                                )
+                        )
+                        {
+                            TextButton(onClick = { menyvalgValuta = true }) {
+                                TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 25.sp)
+                            }
+                            DropdownMenu(
+                                expanded = menyvalgValuta,
+                                onDismissRequest = { menyvalgValuta = false }) {
+                                listeValuta.forEachIndexed { index, item ->
+                                    DropdownMenuItem({
+                                        TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                                    }, onClick = {
+                                        when (listeValuta[index]) {
+                                            "NOK" -> {
+                                                valutaNOK = true
+                                                valutaEUR = false
+                                            }
+                                            "€" -> {
+                                                valutaEUR = true
+                                                valutaNOK = false
+                                            }
+                                            else -> "ugyldig Valuta"
+                                        }
+                                        val endre = sharedPrefNOK.edit()
+                                        endre.putBoolean("valutaNOK", valutaNOK)
+                                        endre.apply()
+                                        val endre1 = sharedPrefEur.edit()
+                                        endre1.putBoolean("valutaEUR", valutaEUR)
+                                        endre1.apply()
+                                        menyvalgValuta = false
+                                        velgValuta = listeValuta[index]
+                                    },
+                                        trailingIcon = {
+                                            Icon(
+                                                iconValuta,
+                                                "",
+                                                Modifier.clickable { menyvalgValuta = !menyvalgValuta }
+                                            )
+                                        })
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+             Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                )
+                {
+                    Button(onClick = { apneNotifikasjonInstillinger(context) }) {
+                        TekstMedBakgrunn(tekst = "Notifikasjon for priser", fontSize = 20.sp)
+                    }
+                }
+
+        }
+    } else {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
+        {
+            TekstMedBakgrunn(
+                tekst = "Settings",
+                fontSize = 50.sp,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+            Divider(color = Color.Black)
+            Spacer(modifier = Modifier.padding(16.dp))
+            RoundedEdgeCardBody()
+            {
+                TekstMedBakgrunn(
+                    tekst = "Her kan du velge de \n ulike sonene",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(25.dp))
                 Box(
                     modifier = Modifier
-                        .background(Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()) , CircleShape)
-
-                ) {
-
+                        .background(
+                            Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()),
+                            CircleShape
+                        )
+                )
+                {
                     TextButton(onClick = { menyValgSone = true }) {
-                        TekstMedBakgrunn(tekst = Utils.convertZoneCode(valgtSone), fontSize = 25.sp)
+                        TekstMedBakgrunn(
+                            tekst = Utils.convertZoneCode(valgtSone),
+                            fontSize = 25.sp
+                        )
                     }
-                    DropdownMenu(expanded = menyValgSone, onDismissRequest = { menyValgSone = false }) {
+                    DropdownMenu(
+                        expanded = menyValgSone,
+                        onDismissRequest = { menyValgSone = false }) {
                         listeSone.forEachIndexed { index, item ->
-                            DropdownMenuItem({
-                                TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
-                            }, onClick = {
-                                val element = listeSone[index]
-                                valgtSone = when (element) {
-                                    "Oslo Øst-Norge" -> "NO1"
-                                    "Kristiandsand Sør-Norge" -> "NO2"
-                                    "Trondheim Midt-Norge" -> "NO3"
-                                    "Tromsø Nord-Norge" -> "NO4"
-                                    "Bergen Vest-Norge" -> "NO5"
-                                    else -> "Finner ikke valgt sone"
-                                }
-                                val editor = sharedPrefSone.edit()
-                                editor.putString("valgtSone", valgtSone)
-                                editor.apply()
-                                menyValgSone = false
-                                valgtSone = element
+                            DropdownMenuItem(
+                                {
+                                    TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                                }, onClick = {
+                                    val element = listeSone[index]
+                                    valgtSone = when (element) {
+                                        "Oslo Øst-Norge" -> "NO1"
+                                        "Kristiandsand Sør-Norge" -> "NO2"
+                                        "Trondheim Midt-Norge" -> "NO3"
+                                        "Tromsø Nord-Norge" -> "NO4"
+                                        "Bergen Vest-Norge" -> "NO5"
+                                        else -> "Finner ikke valgt sone"
+                                    }
+                                    val editor = sharedPrefSone.edit()
+                                    editor.putString("valgtSone", valgtSone)
+                                    editor.apply()
+                                    menyValgSone = false
+                                    valgtSone = element
 
-                            },
-                                trailingIcon = {
+                                }, trailingIcon = {
                                     Icon(
                                         iconSone,
                                         "",
-                                        Modifier.clickable { menyValgSone = !menyValgSone })
+                                        Modifier.clickable { menyValgSone = !menyValgSone }
+                                    )
                                 })
                         }
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(120.dp))
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(
-                        Color(color = MaterialTheme.colorScheme.primary.toArgb()),
-                        shape = RoundedCornerShape(16.dp)
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally
-
-            ) {
-
-                TekstMedBakgrunn(tekst = "Her kan du velge valuta", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.padding(25.dp))
+            RoundedEdgeCardBody()
+            {
+                TekstMedBakgrunn(
+                    tekst = "Her kan du velge valuta",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(30.dp))
                 Box(
                     modifier = Modifier
- 
-                        // .height(100.dp)
-                        .background(Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()), CircleShape)
-                ) {
+                        .background(
+                            Color(color = MaterialTheme.colorScheme.onPrimary.toArgb()),
+                            CircleShape
+                        )
+                )
+                {
                     TextButton(onClick = { menyvalgValuta = true }) {
                         TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 35.sp)
                     }
                     DropdownMenu(
                         expanded = menyvalgValuta,
-                        onDismissRequest = { menyvalgValuta = false } ) {
+                        onDismissRequest = { menyvalgValuta = false }) {
                         listeValuta.forEachIndexed { index, item ->
                             DropdownMenuItem({
                                 TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
@@ -200,7 +343,6 @@ fun SettingsScreen( ) {
                                         valutaEUR = true
                                         valutaNOK = false
                                     }
-
                                     else -> "ugyldig Valuta"
                                 }
                                 val endre = sharedPrefNOK.edit()
@@ -210,37 +352,41 @@ fun SettingsScreen( ) {
                                 endre1.putBoolean("valutaEUR", valutaEUR)
                                 endre1.apply()
                                 menyvalgValuta = false
-
                                 velgValuta = listeValuta[index]
                             },
                                 trailingIcon = {
                                     Icon(
                                         iconValuta,
                                         "",
-                                        Modifier.clickable { menyvalgValuta = !menyvalgValuta })
+                                        Modifier.clickable { menyvalgValuta = !menyvalgValuta }
+                                    )
                                 })
                         }
-
                     }
                 }
             }
             Spacer(modifier = Modifier.padding(16.dp))
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(checked = isCkecked, onCheckedChange = {
-                    isCkecked = it
-                    val endre = sharedPrefChecked.edit()
-                    endre.putBoolean("ischecked",isCkecked)
-                    endre.apply()})
 
-                TekstMedBakgrunn(tekst = "Notifikasjon", fontSize = 16.sp)
-            }
-               Spacer(modifier = Modifier.padding(50.dp))
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(onClick = { apneNotifikasjonInstillinger(context) }) {
+                        TekstMedBakgrunn(tekst = "Notifikasjon for priser", fontSize = 20.sp)
+                    }
+
+                }
+            Spacer(modifier = Modifier.padding(50.dp))
         }
     }
 }
+
+fun apneNotifikasjonInstillinger(context: Context) {
+    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+    intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+    context.startActivity(intent)
+}
+
 
 @Composable
 fun TekstMedBakgrunn(
@@ -251,23 +397,14 @@ fun TekstMedBakgrunn(
 
 
 ) {
-   Text(text = tekst,
-       color = MaterialTheme.colorScheme.onBackground,
-       fontSize = fontSize,
-       fontWeight = fontWeight,
-       textAlign = TextAlign.Center,
-       modifier = modifier)
+    Text(text = tekst,
+        color = MaterialTheme.colorScheme.onBackground,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        textAlign = TextAlign.Center,
+        modifier = modifier)
 
 }
 
-fun kontrastFarge(backgroundColor: Color, modifier: Modifier = Modifier): Color {
 
-    val farge = (0.299 * backgroundColor.red + 0.587 * backgroundColor.green + 0.114 * backgroundColor.blue).toFloat()
-
-   return if(farge > 0.5){
-        Black
-    } else {
-        White
-    }
-}
 
