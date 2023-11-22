@@ -51,7 +51,7 @@ fun HomeScreen() {
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     val sharedPrefMva = LocalContext.current.getSharedPreferences("mySharedPrefMva", Context.MODE_PRIVATE)
-    val litenOverskrift = 18.sp; val pris = 50.sp; val valuta = if(isLandscape)15.sp else 25.sp
+    val litenOverskrift = 18.sp; val pris = 50.sp; val valuta = if(isLandscape)16.sp else 16.sp
     val datesize = 15.sp; val paddingMellomOverskrifter = 10.dp
     var mVa by remember { mutableStateOf(sharedPrefMva.getBoolean("medMva", false))}
     val year =  LocalDate.now().year
@@ -59,6 +59,7 @@ fun HomeScreen() {
     val day = LocalDateTime.now().dayOfMonth
     val list = fetchResult(year = year.toString(), month = month.toString(), day.toString())
     var currTimeHour by remember { mutableIntStateOf(LocalTime.now().hour)}
+    var currTimeMinute by remember { mutableIntStateOf(LocalTime.now().minute)}
     var hourHolder = 0
     var minuteHolder = 0
     var median by remember { mutableStateOf("")}
@@ -72,7 +73,6 @@ fun HomeScreen() {
     val parsedDate = LocalDate.parse(currentDate, formatter)
     val isFirstDateOfMonth = parsedDate.dayOfMonth == 1
     val isFirstDateOfYear = parsedDate.dayOfYear == 1
-    var holder = 0
 
     DisposableEffect(currTimeHour) {
         val scope = CoroutineScope(Dispatchers.Main)
@@ -82,12 +82,12 @@ fun HomeScreen() {
                 delay(30_000)
                 hourHolder = LocalTime.now().hour
                 minuteHolder = LocalTime.now().minute
-                holder = LocalTime.now().second
                 if (hourHolder>currTimeHour) {
                     println(1)
                     if (minuteHolder > 2) {
                         println(2)
                         currTimeHour = hourHolder
+                        currTimeMinute = minuteHolder
                         dagensPrisKr = if (Utils.getValuta() == "NOK") {
                             formatValutaToString(list?.get(currTimeHour)?.nokPerKwh)
                         } else {
@@ -110,7 +110,7 @@ fun HomeScreen() {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 TekstMedBakgrunn(
                     tekst = "Strømpriser",
-                    fontSize = 45.sp
+                    fontSize = 35.sp
                 )
                 Divider(color = Color.Black)
             }
@@ -206,7 +206,7 @@ fun HomeScreen() {
                     }
                 }
 
-                if (currTimeHour > 8) {
+                if (currTimeHour >= 13 && currTimeMinute > 2) {
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
@@ -321,7 +321,7 @@ fun HomeScreen() {
             }
 
             Spacer(modifier = Modifier.padding(16.dp))
-            if (currTimeHour > 13) {
+            if (currTimeHour >= 13 && currTimeMinute > 2) {
                 RoundedEdgeCardBody {
                     TekstMedBakgrunn(
                         tekst = "Median pris imorgen",
