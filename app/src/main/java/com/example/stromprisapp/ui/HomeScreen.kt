@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -110,11 +109,11 @@ fun HomeScreen() {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 TekstMedBakgrunn(
                     tekst = "Strømpriser",
-                    fontSize = 35.sp
+                    fontSize = 35.sp,
+                    textColor = MaterialTheme.colorScheme.onBackground
                 )
-                Divider(color = Color.Black)
             }
-            Spacer(modifier = Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
 
             Row(
                 modifier = Modifier
@@ -206,7 +205,7 @@ fun HomeScreen() {
                     }
                 }
 
-                if (currTimeHour >= 13 && currTimeMinute > 2) {
+                if (currTimeHour >= 13) {
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
@@ -267,12 +266,14 @@ fun HomeScreen() {
             }
 
             if (Global.valgtSone != "NO4") {
+                Spacer(modifier = Modifier.padding(8.dp))
                 Row {
                     mVa = medMvaSwitch(sharedPreferences = sharedPrefMva)
                     TekstMedBakgrunn(
                         tekst = " med mVa",
                         fontSize = datesize,
-                        modifier = Modifier.padding(top = 15.dp)
+                        modifier = Modifier.padding(top = 15.dp),
+                        textColor = MaterialTheme.colorScheme.onBackground
                     )
                 }
             } else {
@@ -289,12 +290,12 @@ fun HomeScreen() {
                 TekstMedBakgrunn(
                     tekst = "Strømpriser",
                     modifier = Modifier.padding(top = paddingMellomOverskrifter),
-                    fontSize = 35.sp
+                    fontSize = 35.sp,
+                    textColor = MaterialTheme.colorScheme.onBackground
                 )
-                Divider(color = Color.Black)
             }
 
-     Spacer(modifier = Modifier.padding(16.dp))
+     Spacer(modifier = Modifier.padding(8.dp))
             RoundedEdgeCardBody {
                 TekstMedBakgrunn(
                     tekst = "Strømprisen nå",
@@ -320,8 +321,8 @@ fun HomeScreen() {
                 }
             }
 
-            Spacer(modifier = Modifier.padding(16.dp))
-            if (currTimeHour >= 13 && currTimeMinute > 2) {
+            Spacer(modifier = Modifier.padding(8.dp))
+            if (currTimeHour >= 13) {
                 RoundedEdgeCardBody {
                     TekstMedBakgrunn(
                         tekst = "Median pris imorgen",
@@ -375,7 +376,7 @@ fun HomeScreen() {
                     }
                 }
             }
-            Spacer(modifier = Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
             RoundedEdgeCardBody {
                 TekstMedBakgrunn(
                     tekst = "Medianpris for gårsdagen",
@@ -428,12 +429,13 @@ fun HomeScreen() {
             }
 
             if (Global.valgtSone != "NO4") {
-                Row(modifier = Modifier.padding(top = 10.dp)) {
+                Row(modifier = Modifier.padding(top = 18.dp)) {
                     mVa = medMvaSwitch(sharedPreferences = sharedPrefMva)
                     TekstMedBakgrunn(
                         tekst = " med mVa",
                         fontSize = datesize,
-                        modifier = Modifier.padding(top = 15.dp)
+                        modifier = Modifier.padding(top = 15.dp),
+                        textColor = MaterialTheme.colorScheme.onBackground
                     )
                 }
             } else {

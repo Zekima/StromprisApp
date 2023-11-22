@@ -1,8 +1,6 @@
 package com.example.stromprisapp.ui
 
 import android.annotation.SuppressLint
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -18,18 +16,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -48,8 +42,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
 import com.example.stromprisapp.Utils
 import com.example.stromprisapp.ui.Global.sharedPrefEur
 import com.example.stromprisapp.ui.Global.sharedPrefNOK
@@ -58,10 +50,8 @@ import com.example.stromprisapp.ui.Global.valgtSone
 import com.example.stromprisapp.ui.Global.valutaEUR
 import com.example.stromprisapp.ui.Global.valutaNOK
 import com.example.stromprisapp.ui.Global.velgValuta
-import com.example.stromprisapp.ui.theme.Black
 import com.example.stromprisapp.ui.theme.RoundedEdgeCardBody
 import com.example.stromprisapp.ui.theme.RoundedEdgeCardBodyHorizontal
-import com.example.stromprisapp.ui.theme.White
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -101,10 +91,10 @@ fun SettingsScreen( ) {
         )
         {
             TekstMedBakgrunn(
-                tekst = "Settings",
-                fontSize = 50.sp
+                tekst = "Innstillinger",
+                fontSize = 35.sp,
+                textColor = MaterialTheme.colorScheme.onBackground
             )
-            Divider(color = Color.Black)
             Spacer(modifier = Modifier.padding(5.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -130,7 +120,8 @@ fun SettingsScreen( ) {
                             TextButton(onClick = { menyValgSone = true }) {
                                 TekstMedBakgrunn(
                                     tekst = Utils.convertZoneCode(valgtSone),
-                                    fontSize = 25.sp
+                                    fontSize = 25.sp,
+                                    textColor = MaterialTheme.colorScheme.onBackground
                                 )
                             }
                             DropdownMenu(
@@ -139,7 +130,7 @@ fun SettingsScreen( ) {
                                 listeSone.forEachIndexed { index, item ->
                                     DropdownMenuItem(
                                         {
-                                            TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                                            TekstMedBakgrunn(tekst = item, fontSize = 20.sp, textColor = MaterialTheme.colorScheme.onBackground)
                                         }, onClick = {
                                             val element = listeSone[index]
                                             valgtSone = when (element) {
@@ -176,6 +167,7 @@ fun SettingsScreen( ) {
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold
                         )
+                        Spacer(modifier = Modifier.height(25.dp))
                         Box(
                             modifier = Modifier
                                 .background(
@@ -185,14 +177,14 @@ fun SettingsScreen( ) {
                         )
                         {
                             TextButton(onClick = { menyvalgValuta = true }) {
-                                TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 25.sp)
+                                TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 25.sp, textColor = MaterialTheme.colorScheme.onBackground)
                             }
                             DropdownMenu(
                                 expanded = menyvalgValuta,
                                 onDismissRequest = { menyvalgValuta = false }) {
                                 listeValuta.forEachIndexed { index, item ->
                                     DropdownMenuItem({
-                                        TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                                        TekstMedBakgrunn(tekst = item, fontSize = 20.sp, textColor = MaterialTheme.colorScheme.onBackground)
                                     }, onClick = {
                                         when (listeValuta[index]) {
                                             "NOK" -> {
@@ -245,18 +237,18 @@ fun SettingsScreen( ) {
         )
         {
             TekstMedBakgrunn(
-                tekst = "Settings",
-                fontSize = 50.sp,
-                modifier = Modifier.padding(top = 16.dp)
+                tekst = "Innstillinger",
+                fontSize = 35.sp,
+                modifier = Modifier.padding(top = 16.dp),
+                textColor = MaterialTheme.colorScheme.onBackground
             )
-            Divider(color = Color.Black)
             Spacer(modifier = Modifier.padding(16.dp))
             RoundedEdgeCardBody()
             {
                 TekstMedBakgrunn(
                     tekst = "Her kan du velge de \n ulike sonene",
                     fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(25.dp))
                 Box(
@@ -270,7 +262,8 @@ fun SettingsScreen( ) {
                     TextButton(onClick = { menyValgSone = true }) {
                         TekstMedBakgrunn(
                             tekst = Utils.convertZoneCode(valgtSone),
-                            fontSize = 25.sp
+                            fontSize = 25.sp,
+                            textColor = MaterialTheme.colorScheme.onBackground
                         )
                     }
                     DropdownMenu(
@@ -279,7 +272,7 @@ fun SettingsScreen( ) {
                         listeSone.forEachIndexed { index, item ->
                             DropdownMenuItem(
                                 {
-                                    TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                                    TekstMedBakgrunn(tekst = item, fontSize = 20.sp, textColor = MaterialTheme.colorScheme.onBackground)
                                 }, onClick = {
                                     val element = listeSone[index]
                                     valgtSone = when (element) {
@@ -307,7 +300,7 @@ fun SettingsScreen( ) {
                     }
                 }
             }
-            Spacer(modifier = Modifier.padding(25.dp))
+            Spacer(modifier = Modifier.padding(16.dp))
             RoundedEdgeCardBody()
             {
                 TekstMedBakgrunn(
@@ -325,7 +318,7 @@ fun SettingsScreen( ) {
                 )
                 {
                     TextButton(onClick = { menyvalgValuta = true }) {
-                        TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 35.sp)
+                        TekstMedBakgrunn(tekst = Utils.getValuta(), fontSize = 35.sp, textColor = MaterialTheme.colorScheme.onBackground)
                     }
                     DropdownMenu(
                         expanded = menyvalgValuta,
@@ -391,6 +384,7 @@ fun apneNotifikasjonInstillinger(context: Context) {
 @Composable
 fun TekstMedBakgrunn(
     tekst: String,
+    textColor: Color = MaterialTheme.colorScheme.onPrimary,
     fontSize: TextUnit = 16.sp,
     fontWeight: FontWeight = FontWeight.Normal,
     modifier: Modifier = Modifier
@@ -398,7 +392,7 @@ fun TekstMedBakgrunn(
 
 ) {
     Text(text = tekst,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = textColor,
         fontSize = fontSize,
         fontWeight = fontWeight,
         textAlign = TextAlign.Center,
