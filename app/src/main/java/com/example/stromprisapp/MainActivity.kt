@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
 
             // Log and toast
             Log.d(TAG, "DET FUNKET")
+            Log.d(TAG, token.toString())
             Toast.makeText(baseContext, token.toString(), Toast.LENGTH_SHORT).show()
         })
 

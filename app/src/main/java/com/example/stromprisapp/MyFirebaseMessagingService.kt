@@ -45,12 +45,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
             val builder = NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.power_icon)
                 .setContentTitle(title)
-                .setStyle(NotificationCompat.BigTextStyle().bigText(content))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentText("Praise Jesus!")
+                .setContentText(content)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
-
+                .setVibrate(longArrayOf( 1000 , 1000 , 1000 , 1000 ))
             // notificationId is a unique int for each notification that you must define
             manager.notify(id, builder.build())
 
