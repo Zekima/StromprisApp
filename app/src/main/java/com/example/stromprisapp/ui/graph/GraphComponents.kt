@@ -20,11 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,9 +51,6 @@ import com.example.stromprisapp.Utils.includeFees
 import com.example.stromprisapp.ui.Global.valgtSone
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun RegionRow(navController: NavController) {
@@ -208,15 +202,9 @@ fun GraphContent(
     val hitboxRecs = remember { mutableStateOf(ArrayList<Rect>()) }
     val pointRecs = remember { mutableStateOf(ArrayList<Rect>()) }
 
-    val hourFormat = SimpleDateFormat("HH", Locale.getDefault())
-    val currentHour = remember { hourFormat.format(Date()).toInt() }
-    var selectedHour by remember { mutableIntStateOf(currentHour) }
-
     var path: Path? = null
 
     val boxSize = remember { mutableStateOf(Size(0f, 0f)) }
-
-    var showTooltip by remember { mutableStateOf(false) }
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -226,8 +214,6 @@ fun GraphContent(
     var yScale = 0f
     var minPrice = 0f
     var maxPrice: Float
-
-    showTooltip = false;
 
     val paint = android.graphics
         .Paint()
@@ -363,7 +349,6 @@ fun GraphContent(
 
                         pointRecs.value.add(pointRect)
 
-                        // could be reworked
                         val hitboxLeft = i * sectionWidth
                         val hitboxRight = hitboxLeft + sectionWidth
 
@@ -380,23 +365,10 @@ fun GraphContent(
             }
     ) {
 
-        LaunchedEffect(sortedData) {
-            showTooltip = true
-        }
-
-        if (showTooltip && activeButton === "today" && sortedData !== null && selectedDataPoint === null) {
-            if ((selectedHour) < sortedData.size) {
-                onSelectedDataPointChanged(sortedData[selectedHour])
-                onSelectedDataPointIndexChanged(selectedHour)
-            } else {
-                onSelectedDataPointChanged(null)
-            }
-        }
-
         if (!isLoading && selectedDataPoint !== null && selectedDataPointIndex < pointRecs.value.size) {
             val currentRect = pointRecs.value[selectedDataPointIndex]
             PriceTooltip(
-                selectedDataPoint = selectedDataPoint,
+                selectedDataPoint = sortedData?.get(selectedDataPointIndex),
                 rect = currentRect,
                 includeFees = checked
             )
