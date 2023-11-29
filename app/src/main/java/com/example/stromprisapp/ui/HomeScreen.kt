@@ -467,42 +467,10 @@ fun getLastDayOfMonth(year: Int, month: Int): Int {
         YearMonth.of(year, month)
     return yearMonth.lengthOfMonth()
 }
-
-/*fun calcMedian(list : List<PriceData>?): Double {
-    if (list != null) {
-        var h1 = 0.0
-        var h2 = 0.0
-        if (Utils.getValuta() == "NOK") {
-            val sortedList = list.sortedBy { it.nokPerKwh }
-            println(sortedList.toString())
-            if (sortedList.size % 2 == 0) {
-                 h1 = sortedList.get((list.size/2) -1).nokPerKwh
-                 h2 = sortedList.get(list.size/2).nokPerKwh
-                return (h1+h2)/2
-            } else {
-                return sortedList.get((list.size/2)-1).nokPerKwh
-            }
-        } else {
-            val sortedList = list.sortedBy { it.nokPerKwh }
-            println(sortedList.toString())
-            if (sortedList.size % 2 == 0) {
-                h1 = sortedList.get((list.size/2) -1).eurPerKwh
-                h2 = sortedList.get(list.size/2).eurPerKwh
-                return (h1+h2)/2
-            } else {
-                return sortedList.get((list.size/2)-1).eurPerKwh
-            }
-        }
-    }
-    return 0.0
-} */
-
 fun calcMedian(list: List<PriceData>?): Double {
     if (list == null || list.isEmpty()) return 0.0
-
     val even = list.size % 2 == 0
     val middle = list.size / 2
-
     val medianValue: Double = if (Utils.getValuta() == "NOK") {
         list.sortedBy { it.nokPerKwh }.let {
             if (even) (it[middle - 1].nokPerKwh + it[middle].nokPerKwh) / 2 else it[middle].nokPerKwh
@@ -512,7 +480,6 @@ fun calcMedian(list: List<PriceData>?): Double {
             if (even) (it[middle - 1].eurPerKwh + it[middle].eurPerKwh) / 2 else it[middle].eurPerKwh
         }
     }
-
     return medianValue
 }
 
