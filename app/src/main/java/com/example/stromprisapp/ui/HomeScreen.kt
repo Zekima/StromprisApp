@@ -470,7 +470,7 @@ fun getLastDayOfMonth(year: Int, month: Int): Int {
 fun calcMedian(list: List<PriceData>?): Double {
     if (list == null || list.isEmpty()) return 0.0
     val even = list.size % 2 == 0
-    val middle = list.size / 2
+    val middle = (list.size -1) / 2
     val medianValue: Double = if (Utils.getValuta() == "NOK") {
         list.sortedBy { it.nokPerKwh }.let {
             if (even) (it[middle - 1].nokPerKwh + it[middle].nokPerKwh) / 2 else it[middle].nokPerKwh
