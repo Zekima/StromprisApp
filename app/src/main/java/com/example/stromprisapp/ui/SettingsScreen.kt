@@ -325,7 +325,7 @@ fun SettingsScreen( ) {
                         onDismissRequest = { menyvalgValuta = false }) {
                         listeValuta.forEachIndexed { index, item ->
                             DropdownMenuItem({
-                                TekstMedBakgrunn(tekst = item, fontSize = 20.sp)
+                                TekstMedBakgrunn(tekst = item, fontSize = 20.sp, textColor = MaterialTheme.colorScheme.onBackground)
                             }, onClick = {
                                 when (listeValuta[index]) {
                                     "NOK" -> {
