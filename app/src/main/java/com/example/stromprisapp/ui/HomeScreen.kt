@@ -35,7 +35,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -54,8 +53,8 @@ fun HomeScreen() {
     val datesize = 15.sp; val paddingMellomOverskrifter = 10.dp
     var mVa by remember { mutableStateOf(sharedPrefMva.getBoolean("medMva", false))}
     val year =  LocalDate.now().year
-    val month = LocalDate.now().month.value
-    val day = LocalDateTime.now().dayOfMonth
+    val month = LocalDate.now().monthValue
+    val day = LocalDate.now().dayOfMonth
     val list = fetchResult(year = year.toString(), month = month.toString(), day.toString())
     var currTimeHour by remember { mutableIntStateOf(LocalTime.now().hour)}
     var currTimeMinute by remember { mutableIntStateOf(LocalTime.now().minute)}
@@ -469,29 +468,52 @@ fun getLastDayOfMonth(year: Int, month: Int): Int {
     return yearMonth.lengthOfMonth()
 }
 
-fun calcMedian(list : List<PriceData>?): Double {
+/*fun calcMedian(list : List<PriceData>?): Double {
     if (list != null) {
         var h1 = 0.0
         var h2 = 0.0
         if (Utils.getValuta() == "NOK") {
-            if (list.size % 2 == 0) {
-                 h1 = list.get((list.size/2) -1).nokPerKwh
-                 h2 = list.get(list.size/2).nokPerKwh
+            val sortedList = list.sortedBy { it.nokPerKwh }
+            println(sortedList.toString())
+            if (sortedList.size % 2 == 0) {
+                 h1 = sortedList.get((list.size/2) -1).nokPerKwh
+                 h2 = sortedList.get(list.size/2).nokPerKwh
                 return (h1+h2)/2
             } else {
-                return list.get((list.size/2)-1).nokPerKwh
+                return sortedList.get((list.size/2)-1).nokPerKwh
             }
         } else {
-            if (list.size % 2 == 0) {
-                h1 = list.get((list.size/2) -1).eurPerKwh
-                h2 = list.get(list.size/2).eurPerKwh
+            val sortedList = list.sortedBy { it.nokPerKwh }
+            println(sortedList.toString())
+            if (sortedList.size % 2 == 0) {
+                h1 = sortedList.get((list.size/2) -1).eurPerKwh
+                h2 = sortedList.get(list.size/2).eurPerKwh
                 return (h1+h2)/2
             } else {
-                return list.get((list.size/2)-1).eurPerKwh
+                return sortedList.get((list.size/2)-1).eurPerKwh
             }
         }
     }
     return 0.0
+} */
+
+fun calcMedian(list: List<PriceData>?): Double {
+    if (list == null || list.isEmpty()) return 0.0
+
+    val even = list.size % 2 == 0
+    val middle = list.size / 2
+
+    val medianValue: Double = if (Utils.getValuta() == "NOK") {
+        list.sortedBy { it.nokPerKwh }.let {
+            if (even) (it[middle - 1].nokPerKwh + it[middle].nokPerKwh) / 2 else it[middle].nokPerKwh
+        }
+    } else {
+        list.sortedBy { it.eurPerKwh }.let {
+            if (even) (it[middle - 1].eurPerKwh + it[middle].eurPerKwh) / 2 else it[middle].eurPerKwh
+        }
+    }
+
+    return medianValue
 }
 
 @Preview

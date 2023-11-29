@@ -46,7 +46,7 @@ todo:
 fun GraphScreen(navController: NavController) {
 
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val currentDate = remember { dateFormat.format(Date()) }
+    val currentDate = remember {dateFormat.format(Date())}
 
     var selectedDataPoint by remember { mutableStateOf<PriceData?>(null) }
     var selectedDataPointIndex by remember { mutableIntStateOf(0) }
