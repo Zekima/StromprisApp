@@ -43,7 +43,6 @@ fun RoundedEdgeCardBody(content: @Composable () -> Unit) {
 }
 @Composable
 fun RoundedEdgeCardBodyHorizontal(content: @Composable () -> Unit) {
-
     Box(
         modifier = Modifier
             .fillMaxWidth()

@@ -473,34 +473,21 @@ fun calcMedian(list : List<PriceData>?): Double {
     if (list != null) {
         var h1 = 0.0
         var h2 = 0.0
-        val listSize = (list?.size?.div(2))?.minus(1)
         if (Utils.getValuta() == "NOK") {
-            if (list.size % 2 == 1) {
-                list.forEachIndexed { index, priceData ->
-                    if (index == listSize) {
-                        h1 = priceData.nokPerKwh
-                    } else if (index == list.size-1) {
-                        h2 = priceData.nokPerKwh
-                    }
-                    return (h1+h2)/2
-                }
-            } else {
-                var value: Double = list.get(list.size - 1).nokPerKwh
-                return value
-            }
-        } else {
-            if (list.size % 2 == 1) {
-                list.forEachIndexed { index, priceData ->
-                    if (index == listSize) {
-                        h1 = priceData.eurPerKwh
-                    } else if (index == list.size-1) {
-                        h2 = priceData.eurPerKwh
-                    }
-                }
+            if (list.size % 2 == 0) {
+                 h1 = list.get((list.size/2) -1).nokPerKwh
+                 h2 = list.get(list.size/2).nokPerKwh
                 return (h1+h2)/2
             } else {
-                var value: Double = list.get(list.size - 1).eurPerKwh
-                return value
+                return list.get((list.size/2)-1).nokPerKwh
+            }
+        } else {
+            if (list.size % 2 == 0) {
+                h1 = list.get((list.size/2) -1).eurPerKwh
+                h2 = list.get(list.size/2).eurPerKwh
+                return (h1+h2)/2
+            } else {
+                return list.get((list.size/2)-1).eurPerKwh
             }
         }
     }
