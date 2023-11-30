@@ -137,7 +137,7 @@ fun HomeScreen() {
                             TekstMedBakgrunn(
                                 tekst = if (dagensPrisKr == "nu") dagensPrisKr
                                 else if (!mVa) dagensPrisKr
-                                else if (mVa) String.format("%.2f", (dagensPrisKr.toDouble() * 1.25))
+                                else if (mVa) String.format("%.1f", (dagensPrisKr.toDouble() * 1.25))
                                 else "ikke funnet",
                                 fontSize = pris
 
@@ -190,7 +190,7 @@ fun HomeScreen() {
                                     tekst = if (median == "nu") median
                                     else if (median.isBlank()) ""
                                     else if (!mVa) median
-                                    else String.format("%.2f", (median.toDouble() * 1.25)),
+                                    else String.format("%.1f", (median.toDouble() * 1.25)),
                                     fontSize = pris,
                                 )
 
@@ -243,7 +243,7 @@ fun HomeScreen() {
                                 tekst = if (median == "nu") median
                                 else if (median.isBlank()) ""
                                 else if (!mVa) median
-                                else String.format("%.2f", (median.toDouble() * 1.25)),
+                                else String.format("%.1f", (median.toDouble() * 1.25)),
                                 fontSize = pris
                             )
 
@@ -301,7 +301,7 @@ fun HomeScreen() {
                     TekstMedBakgrunn(
                         tekst = if (dagensPrisKr == "nu") dagensPrisKr
                         else if (!mVa) dagensPrisKr
-                        else if (mVa) String.format("%.2f", (dagensPrisKr.toDouble() * 1.25))
+                        else if (mVa) String.format("%.1f", (dagensPrisKr.toDouble() * 1.25))
                         else "ikke funnet",
                         fontSize = pris
 
@@ -352,7 +352,7 @@ fun HomeScreen() {
                             tekst = if (median == "nu") median
                             else if (median.isBlank()) ""
                             else if (!mVa) median
-                            else String.format("%.2f", (median.toDouble() * 1.25)),
+                            else String.format("%.1f", (median.toDouble() * 1.25)),
                             fontSize = pris,
                         )
                         TekstMedBakgrunn(
@@ -398,7 +398,7 @@ fun HomeScreen() {
                         tekst = if (median == "nu") median
                         else if (median.isBlank()) ""
                         else if (!mVa) median
-                        else String.format("%.2f", (median.toDouble() * 1.25)),
+                        else String.format("%.1f", (median.toDouble() * 1.25)),
                         fontSize = pris
                     )
                     TekstMedBakgrunn(
