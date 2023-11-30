@@ -104,7 +104,7 @@ fun SettingsScreen( ) {
                     RoundedEdgeCardBodyHorizontal()
                     {
                         TekstMedBakgrunn(
-                            tekst = "Her kan du velge de \n ulike sonene",
+                            tekst = "Velg sone",
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -163,7 +163,7 @@ fun SettingsScreen( ) {
                     RoundedEdgeCardBodyHorizontal()
                     {
                         TekstMedBakgrunn(
-                            tekst = "Her kan du velge valuta\n",
+                            tekst = "Velg sone",
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -246,7 +246,7 @@ fun SettingsScreen( ) {
             RoundedEdgeCardBody()
             {
                 TekstMedBakgrunn(
-                    tekst = "Her kan du velge de \n ulike sonene",
+                    tekst = "Velg sonene",
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,
                 )
@@ -304,7 +304,7 @@ fun SettingsScreen( ) {
             RoundedEdgeCardBody()
             {
                 TekstMedBakgrunn(
-                    tekst = "Her kan du velge valuta",
+                    tekst = "Velg valuta",
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
