@@ -46,7 +46,7 @@ fun RoundedEdgeCardBodyHorizontal(content: @Composable () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(190.dp)
+            .height(205.dp)
             .padding(5.dp)
             .clip(RoundedCornerShape(30.dp))
             .background(Color(color = MaterialTheme.colorScheme.primary.toArgb())),

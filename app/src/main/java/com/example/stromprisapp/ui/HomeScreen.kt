@@ -71,6 +71,8 @@ fun HomeScreen() {
     val parsedDate = LocalDate.parse(currentDate, formatter)
     val isFirstDateOfMonth = parsedDate.dayOfMonth == 1
     val isFirstDateOfYear = parsedDate.dayOfYear == 1
+    val isLastDateOfMonth = parsedDate.dayOfMonth == LocalDate.now().lengthOfMonth()
+    val isLastDateOfYear = parsedDate.dayOfYear == 365
 
     DisposableEffect(currTimeHour) {
         val scope = CoroutineScope(Dispatchers.Main)
@@ -154,7 +156,7 @@ fun HomeScreen() {
                 ) {
                     RoundedEdgeCardBodyHorizontal {
                         TekstMedBakgrunn(
-                            tekst = "Medianpris i går",
+                            tekst = "Median igår",
                             modifier = Modifier.padding(top = paddingMellomOverskrifter),
                             fontSize = litenOverskrift,
                             fontWeight = FontWeight.Bold
@@ -167,23 +169,20 @@ fun HomeScreen() {
                                     getLastDayOfMonth(year, (month - 1)).toString()
                                 )
                                 median = formatValutaToString(calcMedian(list))
-                            }
-
-                            if (isFirstDateOfYear) {
+                            } else if (isFirstDateOfYear) {
                                 val list = fetchResult(
                                     (year - 1).toString(),
-                                    (1).toString(),
-                                    getLastDayOfMonth((year - 1), 1).toString()
+                                    (12).toString(),
+                                    getLastDayOfMonth((year - 1), 12).toString()
                                 )
                                 median = formatValutaToString(calcMedian(list))
+                            } else {
+                                val list = fetchResult(
+                                    (year).toString(),
+                                    (month).toString(),
+                                    (day - 1).toString()
+                                )
                             }
-
-
-                            val list = fetchResult(
-                                (year).toString(),
-                                (month).toString(),
-                                (day - 1).toString()
-                            )
                             if (list != null) {
                                 median = formatValutaToString(calcMedian(list))
                             }
@@ -210,38 +209,34 @@ fun HomeScreen() {
                     ) {
                         RoundedEdgeCardBodyHorizontal {
                             TekstMedBakgrunn(
-                                tekst = "Median pris imorgen",
+                                tekst = "Median imorgen",
                                 modifier = Modifier.padding(top = paddingMellomOverskrifter),
                                 fontSize = litenOverskrift,
                                 fontWeight = FontWeight.Bold
                             )
 
                             Row {
-                                if (isFirstDateOfMonth) {
-                                    println(12)
+                                if (isLastDateOfYear) {
                                     val list = fetchResult(
-                                        year.toString(),
-                                        (month + 1).toString(),
-                                        getLastDayOfMonth(year.toInt(), (month - 1).toInt()).toString()
-                                    )
-                                    median = formatValutaToString(calcMedian(list))
-                                }
-
-                                if (isFirstDateOfYear) {
-
-                                    val list = fetchResult(
-                                        (year + 1).toString(),
+                                        (year+1).toString(),
                                         (1).toString(),
-                                        getLastDayOfMonth((year + 1), 1).toString()
+                                        (1).toString()
                                     )
                                     median = formatValutaToString(calcMedian(list))
+                                } else if (isLastDateOfMonth) {
+                                    val list = fetchResult(
+                                        (year).toString(),
+                                        (month+1).toString(),
+                                        (1).toString()
+                                    )
+                                } else {
+                                    val list = fetchResult(
+                                        (year).toString(),
+                                        (month).toString(),
+                                        (day + 1).toString()
+                                    )
                                 }
 
-                                val list = fetchResult(
-                                    (year).toString(),
-                                    (month).toString(),
-                                    (day + 1).toString()
-                                )
                                 if (list != null) {
                                     median = formatValutaToString(calcMedian(list))
                                 }
@@ -331,31 +326,26 @@ fun HomeScreen() {
                     )
 
                     Row() {
-                        if (isFirstDateOfMonth) {
-                            println(12)
+                        if (isLastDateOfYear) {
                             val list = fetchResult(
-                                year.toString(),
-                                (month + 1).toString(),
-                                getLastDayOfMonth(year.toInt(), (month - 1).toInt()).toString()
-                            )
-                            median = formatValutaToString(calcMedian(list))
-                        }
-
-                        if (isFirstDateOfYear) {
-
-                            val list = fetchResult(
-                                (year + 1).toString(),
+                                (year+1).toString(),
                                 (1).toString(),
-                                getLastDayOfMonth((year + 1), 1).toString()
+                                (1).toString()
                             )
                             median = formatValutaToString(calcMedian(list))
+                        } else if (isLastDateOfMonth) {
+                            val list = fetchResult(
+                                (year).toString(),
+                                (month+1).toString(),
+                                (1).toString()
+                            )
+                        } else {
+                            val list = fetchResult(
+                                (year).toString(),
+                                (month).toString(),
+                                (day + 1).toString()
+                            )
                         }
-
-                        val list = fetchResult(
-                            (year).toString(),
-                            (month).toString(),
-                            (day + 1).toString()
-                        )
                         if (list != null) {
                             median = formatValutaToString(calcMedian(list))
                         }
