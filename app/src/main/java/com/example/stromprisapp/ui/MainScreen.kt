@@ -81,7 +81,7 @@ fun MainScreen() {
                     NavigationBar(
                         modifier = Modifier
                             .fillMaxHeight()
-                            .width(125.dp)
+                            .width(100.dp)
                     ) {
                         Column(
                             verticalArrangement = Arrangement.Top,
