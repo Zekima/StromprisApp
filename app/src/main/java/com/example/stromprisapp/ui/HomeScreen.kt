@@ -459,7 +459,7 @@ fun medMvaSwitch(sharedPreferences: SharedPreferences) : Boolean {
 }
 
 fun formatValutaToString(d: Double?): String {
-    return String.format("%.2f",d?.times(100))
+    return String.format("%.1f",d?.times(100))
 }
 
 fun getLastDayOfMonth(year: Int, month: Int): Int {
