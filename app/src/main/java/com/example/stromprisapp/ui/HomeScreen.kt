@@ -150,59 +150,6 @@ fun HomeScreen() {
                         )
                     }
                 }
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    RoundedEdgeCardBodyHorizontal {
-                        TekstMedBakgrunn(
-                            tekst = "Median igår",
-                            modifier = Modifier.padding(top = paddingMellomOverskrifter),
-                            fontSize = litenOverskrift,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Row {
-                            if (isFirstDateOfMonth) {
-                                val list = fetchResult(
-                                    year.toString(),
-                                    (month - 1).toString(),
-                                    getLastDayOfMonth(year, (month - 1)).toString()
-                                )
-                                median = formatValutaToString(calcMedian(list))
-                            } else if (isFirstDateOfYear) {
-                                val list = fetchResult(
-                                    (year - 1).toString(),
-                                    (12).toString(),
-                                    getLastDayOfMonth((year - 1), 12).toString()
-                                )
-                                median = formatValutaToString(calcMedian(list))
-                            } else {
-                                val list = fetchResult(
-                                    (year).toString(),
-                                    (month).toString(),
-                                    (day - 1).toString()
-                                )
-                            }
-                            if (list != null) {
-                                median = formatValutaToString(calcMedian(list))
-                            }
-
-                            TekstMedBakgrunn(
-                                tekst = if (median == "nu") median
-                                else if (median.isBlank()) ""
-                                else if (!mVa) median
-                                else String.format("%.2f", (median.toDouble() * 1.25)),
-                                fontSize = pris
-                            )
-
-                        }
-                        TekstMedBakgrunn(
-                            tekst = if (Utils.getValuta() == "NOK") "øre/kWh" else "cent/kWh",
-                            fontSize = valuta
-                        )
-                    }
-                }
-
                 if (currTimeHour >= 13) {
                     Column(
                         modifier = Modifier.weight(1f)
@@ -216,30 +163,28 @@ fun HomeScreen() {
                             )
 
                             Row {
+                                var list: List<PriceData>? = null
+
                                 if (isLastDateOfYear) {
-                                    val list = fetchResult(
+                                    list = fetchResult(
                                         (year+1).toString(),
                                         (1).toString(),
                                         (1).toString()
                                     )
-                                    median = formatValutaToString(calcMedian(list))
                                 } else if (isLastDateOfMonth) {
-                                    val list = fetchResult(
+                                    list = fetchResult(
                                         (year).toString(),
                                         (month+1).toString(),
                                         (1).toString()
                                     )
                                 } else {
-                                    val list = fetchResult(
+                                    list = fetchResult(
                                         (year).toString(),
                                         (month).toString(),
                                         (day + 1).toString()
                                     )
                                 }
-
-                                if (list != null) {
-                                    median = formatValutaToString(calcMedian(list))
-                                }
+                                median = formatValutaToString(calcMedian(list))
 
                                 TekstMedBakgrunn(
                                     tekst = if (median == "nu") median
@@ -257,6 +202,60 @@ fun HomeScreen() {
                         }
                     }
                 }
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    RoundedEdgeCardBodyHorizontal {
+                        TekstMedBakgrunn(
+                            tekst = "Median igår",
+                            modifier = Modifier.padding(top = paddingMellomOverskrifter),
+                            fontSize = litenOverskrift,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Row {
+                            var list: List<PriceData>? = null
+                            if (isFirstDateOfMonth) {
+                                list = fetchResult(
+                                    year.toString(),
+                                    (month - 1).toString(),
+                                    getLastDayOfMonth(year, (month - 1)).toString()
+                                )
+                                median = formatValutaToString(calcMedian(list))
+                            } else if (isFirstDateOfYear) {
+                                list = fetchResult(
+                                    (year - 1).toString(),
+                                    (12).toString(),
+                                    getLastDayOfMonth((year - 1), 12).toString()
+                                )
+                                median = formatValutaToString(calcMedian(list))
+                            } else {
+                                list = fetchResult(
+                                    (year).toString(),
+                                    (month).toString(),
+                                    (day - 1).toString()
+                                )
+                            }
+                            median = formatValutaToString(calcMedian(list))
+
+
+                            TekstMedBakgrunn(
+                                tekst = if (median == "nu") median
+                                else if (median.isBlank()) ""
+                                else if (!mVa) median
+                                else String.format("%.2f", (median.toDouble() * 1.25)),
+                                fontSize = pris
+                            )
+
+                        }
+                        TekstMedBakgrunn(
+                            tekst = if (Utils.getValuta() == "NOK") "øre/kWh" else "cent/kWh",
+                            fontSize = valuta
+                        )
+                    }
+                }
+
+
             }
 
             if (Global.valgtSone != "NO4") {
@@ -289,7 +288,7 @@ fun HomeScreen() {
                 )
             }
 
-     Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
             RoundedEdgeCardBody {
                 TekstMedBakgrunn(
                     tekst = "Strømprisen nå",
@@ -326,29 +325,28 @@ fun HomeScreen() {
                     )
 
                     Row() {
+                        var list: List<PriceData>? = null
                         if (isLastDateOfYear) {
-                            val list = fetchResult(
+                            list = fetchResult(
                                 (year+1).toString(),
                                 (1).toString(),
                                 (1).toString()
                             )
                             median = formatValutaToString(calcMedian(list))
                         } else if (isLastDateOfMonth) {
-                            val list = fetchResult(
+                            list = fetchResult(
                                 (year).toString(),
                                 (month+1).toString(),
                                 (1).toString()
                             )
                         } else {
-                            val list = fetchResult(
+                            list = fetchResult(
                                 (year).toString(),
                                 (month).toString(),
                                 (day + 1).toString()
                             )
                         }
-                        if (list != null) {
-                            median = formatValutaToString(calcMedian(list))
-                        }
+                        median = formatValutaToString(calcMedian(list))
 
                         TekstMedBakgrunn(
                             tekst = if (median == "nu") median
@@ -374,33 +372,27 @@ fun HomeScreen() {
                     fontWeight = FontWeight.Bold
                 )
                 Row() {
+                    var list: List<PriceData>? = null
                     if (isFirstDateOfMonth) {
-                        val list = fetchResult(
+                        list = fetchResult(
                             year.toString(),
                             (month - 1).toString(),
                             getLastDayOfMonth(year, (month - 1)).toString()
                         )
-                        median = formatValutaToString(calcMedian(list))
-                    }
-
-                    if (isFirstDateOfYear) {
-                        val list = fetchResult(
+                    } else if (isFirstDateOfYear) {
+                        list = fetchResult(
                             (year - 1).toString(),
                             (1).toString(),
                             getLastDayOfMonth((year - 1), 1).toString()
                         )
-                        median = formatValutaToString(calcMedian(list))
+                    } else {
+                        list = fetchResult(
+                            (year).toString(),
+                            (month).toString(),
+                            (day - 1).toString()
+                        )
                     }
-
-
-                    val list = fetchResult(
-                        (year).toString(),
-                        (month).toString(),
-                        (day - 1).toString()
-                    )
-                    if (list != null) {
-                        median = formatValutaToString(calcMedian(list))
-                    }
+                    median = formatValutaToString(calcMedian(list))
 
                     TekstMedBakgrunn(
                         tekst = if (median == "nu") median
@@ -478,4 +470,3 @@ fun calcMedian(list: List<PriceData>?): Double {
 fun HomePrev() {
     HomeScreen()
 }
-
