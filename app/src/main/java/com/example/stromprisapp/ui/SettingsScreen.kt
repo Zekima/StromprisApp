@@ -163,7 +163,7 @@ fun SettingsScreen( ) {
                     RoundedEdgeCardBodyHorizontal()
                     {
                         TekstMedBakgrunn(
-                            tekst = "Velg sone",
+                            tekst = "Velg valuta",
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold
                         )
